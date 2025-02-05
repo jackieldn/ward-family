@@ -1,0 +1,104 @@
+@media (max-width: 750px) {
+    .categories {
+        grid-template-columns: 1fr; /* Forces a single-column layout on small screens */
+    }
+}
+
+/* Responsive: Switch to Single Column on Small Screens */
+@media (max-width: 600px) {
+    .summary-container {
+        grid-template-columns: 1fr; /* Switch to single column on small screens */
+    }
+}
+
+/* 🎛 Expense Input Row */
+.expense-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+    max-width: 350px;
+    margin: auto;
+}
+
+@media (max-width: 800px) {
+    .graph-box {
+        width: 100%; /* Expands fully when stacked */
+        min-width: unset; /* Overrides the 400px minimum width */
+    }
+}
+
+/* Individual Box Colours (No Changes Here) */
+.graph-box-rent { background: #B7CBEB; }
+.graph-box-utilities { background: #F4B8DC; }
+.graph-box-savings { background: #9BAA64; }
+
+/* Ensure h3 stays above the graph boxes */
+.graphs-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    flex-direction: row; /* Default: Side-by-side */
+}
+
+@media (max-width: 800px) {
+    .graphs-container {
+        flex-direction: column; /* Change to vertical stacking */
+        align-items: center; /* Center-align stacked boxes */
+    }
+}
+
+/* Universal h3 Styling */
+h3 {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 25px;
+    margin-left: 0px;
+    color: #333;
+}
+
+@media (max-width: 1200px) {
+    .summary-box {
+        width: 100%; /* Expands fully on smaller screens */
+        min-width: unset;
+    }
+}
+
+/* Responsive: Adjusts layout for smaller screens */
+@media (max-width: 800px) {
+    .graph-box {
+        width: 100%; /* Makes each graph take full width on mobile */
+        min-width: unset;
+    }
+}
+
+/* Make graphs responsive */
+canvas {
+    width: 100% !important;
+    height: 250px !important;
+}
+
+@media (min-width: 600px) {
+    .budget-summary-container {
+        column-count: 2; /* Uses column layout for natural packing */
+        column-gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .budget-summary-container {
+        column-count: 1; /* Switch to single-column stacking */
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+    .summary-box-report {
+        min-width: 100%; /* Ensures it takes full width on small screens */
+    }
+}

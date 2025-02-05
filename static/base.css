@@ -1,0 +1,18 @@
+/* 🌿 General Styles */
+body {
+    background-color: #fef2d9;
+    font-family: "Outfit", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* General Styles */
+body {
+    background-color: #fef2d9;
+    font-family: "Outfit", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Ovo&family=Radley&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="/" class="home-icon">The Ward Family</a>
+        <nav class="nav-links">
+            <a href="/catify">Catify</a>
+            <a href="/create">Budget</a>
+            <a href="/report" class="active">Report</a>
+            <a href="/equity" class="active">Equity</a>
+        </nav>
+    </header>
+
+    <div class="dashboard">
+        <h1>Hello, Ward Family</h1>
+        
+        <!-- Wrap everything except the title in one white box -->
+        <div class="content-box">
+            <h3>Current Month</h3>
+            <div class="summary-box">
+                <div id="currentMonthData" class="summary-container"></div>
+            </div>
+    
+            <div class="graphs-container">
+                <div class="graph-container">
+                    <h3>Monthly Total Expenses</h3>
+                    <div class="graph-box graph-box-utilities">
+                        <canvas id="utilitiesChart"></canvas>
+                    </div>
+                </div>
+    
+                <div class="graph-container">
+                    <h3>Savings Tracker</h3>
+                    <div class="graph-box graph-box-savings">
+                        <canvas id="savingsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

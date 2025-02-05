@@ -1,0 +1,355 @@
+/* 🎯 Center the "Create Budget" Title */
+h1 {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 400;
+    font-family: 'Radley', serif;
+    margin-bottom: 20px;
+    font-style: normal;
+    letter-spacing: -2px;
+}
+
+.home-icon {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 400;
+    font-family: 'Ovo', serif;
+    margin-bottom: 20px;
+    font-style: normal;
+    letter-spacing: 0px;
+}
+
+/* 📅 Center the Date Selection */
+.date-selection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Adjusted spacing between Month & Year */
+    margin-bottom: 40px;
+    font-size: 18px;
+}
+
+/* Style the Select & Input Fields for Date */
+.date-selection label {
+    font-weight: bold;
+}
+
+.date-selection select {
+    min-width: 140px; /* Keeps dropdown readable */
+    height: 43px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 16px;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.date-selection input[type="number"] {
+    width: 100px; /* Adjusted width */
+    min-width: 100px;
+    max-width: 120px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 16px;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+/* Improve Focus Effect */
+.date-selection input:focus {
+    border-color: #87CEFA;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 2px rgba(250, 217, 135, 0.5);
+}
+
+/* Improve Focus Effect */
+.date-selection select:focus {
+    border-color: #87CEFA;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 2px rgba(250, 217, 135, 0.5);
+}
+
+/* Generate Report Button */
+#fetch-report {
+    background: #f6d365;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: background 0.2s ease-in-out
+}
+
+#fetch-report:hover {
+    background: #e5a51a;
+}
+
+/* Budget Category Boxes */
+.category-box-report {
+    background: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 1px rgba(219, 163, 23, 0.226);
+    text-align: center;
+    min-width: 180px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.category-box-report h3 {
+    margin-bottom: 5px;
+    font-size: 17px;
+    color: #333;
+}
+
+.category-box-report {
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 180px; /* Ensures minimum size */
+    flex: 1 1 180px; /* Allows flex behavior */
+}
+
+.category-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.category-amount {
+    font-size: 25px;
+    font-weight: 600;
+    color: #444;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Category Header */
+.category-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Budget Titles */
+.budget-title {
+    font-size: 1em;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+/* Total Box */
+.total-box {
+    font-size: 20px;
+    font-weight: 800;
+    font-family: 'Ovo', serif;
+    margin-bottom: 20px;
+    font-style: normal;
+    padding-top: 25px;
+    border-top: 1px solid #f5deae;
+    margin-top: 10px;
+    text-align: right;
+}
+
+/* Ensure title-amount blocks are aligned left and spaced properly */
+.summary-container {
+    display: flex;
+    justify-content: center; /* Centers the inner boxes */
+    align-items: center; /* Centers vertically */
+    gap: 15px; /* Adjust gap as needed */
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    width: 100%;
+    max-width: 800px; /* Ensures it matches parent width */
+}
+
+.budget-block {
+    width: 140px; /* Fixed width for consistency */
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+/*----Dashboard----/*
+
+/* Styles for the summary box */
+.summary-box {
+    background: #f6d365;
+    padding: 30px;
+    max-width: 1100px;
+    min-width: 400px; /* Ensures the box is at least 400px wide */
+    width: 100%;
+    margin: 0 auto 20px auto;
+    border-radius: 25px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.summary-box-report {
+    background: #f6d365;
+    padding: 30px;
+    border-radius: 25px;
+    max-width: 800px; /* Ensures alignment with report-container */
+    margin: 0 auto 25px auto; /* Center horizontally */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center contents vertically */
+    justify-content: center; /* Center contents horizontally */
+}
+
+/* Styles for each graph box */
+.graph-box {
+    padding: 15px;
+    border-radius: 20px;
+    min-width: 400px; /* Ensures each box has a minimum width */
+    width: 22%; /* Default: Side-by-side */
+    text-align: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ----Report boxes----- */
+/* Budget Summary - Ensures Even Height & No Gaps */
+.budget-summary-container {
+    column-count: 2; /* Adjust for desired number of columns */
+    column-gap: 20px; /* Space between columns */
+    max-width: 900px;
+    margin: auto;
+    gap: 20px; /* Keeps spacing consistent */
+    max-width: 900px;
+    margin: auto;
+    align-items: start; /* Prevents stretching */
+}
+
+/* Budget Category Box (Housing, Food, etc.) */
+.budget-category-box {
+    display: inline-block; /* Ensures boxes stay within columns */
+    margin-bottom: 20px; /* Keeps spacing */
+    break-inside: avoid; /* Prevents boxes from breaking between columns */
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 4px rgba(219, 163, 23, 0.3);
+    text-align: left;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Budget Category Header */
+.budget-category-box .category-header {
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid #f5deae;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+/* Budget Items Inside Each Box */
+.budget-items-container {
+    flex-grow: 1; /* Expands to ensure equal height for all boxes */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Budget Total */
+.budget-total {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: right;
+    border-top: 2px solid #f5deae;
+    padding-top: 10px;
+}
+
+/* Budget Item - Ensures Consistent Layout */
+.budget-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    padding: 5px 0;
+    align-items: center;
+}
+
+/* Left-aligned title with fixed width */
+.budget-item span:first-child {
+    text-align: left;
+    width: 180px; /* Ensures all titles take up the same space */
+    flex-shrink: 0; /* Prevents shrinking */
+}
+
+/* Right-aligned amount with consistent width */
+.budget-item span:last-child {
+    text-align: right;
+    font-weight: bold;
+    min-width: 120px; /* Ensures all values align properly */
+    display: inline-block;
+}
+
+
+
+/* Responsive: Switch to Single Column on Small Screens */
+/* Budget Item - Show Delete Button on Hover */
+.budget-item {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    padding: 5px 0;
+    position: relative;
+}
+
+.budget-item span:first-child {
+    text-align: left;
+    flex-grow: 1; /* Expands to fill available space */
+    white-space: nowrap; /* Prevents text from breaking */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." if text is too long */
+}
+
+/* Delete Button - Hidden by Default */
+.delete-expense {
+    background: transparent;
+    border: none;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.budget-item span:nth-child(2) {
+    text-align: left;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.budget-item span:nth-child(3) {
+    text-align: right;
+    font-weight: bold;
+    min-width: 80px;
+}
+
+/* Show Delete Button on Hover */
+.budget-item:hover .delete-expense {
+    visibility: visible;
+}

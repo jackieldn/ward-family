@@ -1,0 +1,312 @@
+/* 🏠 Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    background: black;
+    padding: 20px;
+    border-radius: 30px;
+    margin: 30px;
+}
+
+.navbar a {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    margin: 0 15px;
+}
+
+/* 📦 Category Section */
+.categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto; /* Centers the container */
+}
+
+.category {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 1px rgba(219, 163, 23, 0.226);
+    min-width: 350px; /* Ensures the categories do not shrink too much */
+}
+
+.category h2 {
+    margin-left: 25px;
+    margin-bottom: 5px;
+}
+
+.category button {
+    display: block;
+    margin-left: auto; /* Pushes button to the right */
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.content-box-equity h2 {
+    text-align: center;
+}
+
+.category button:hover {
+    background: #e51a8d;
+}
+
+/* 🎨 Input Fields & Dropdown */
+.title-select, .custom-title-input, .amount-input {
+    width: 30%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.custom-title-input {
+    display: none;
+}
+
+/* Dropdown Styling */
+.title-select {
+    height: 40px; /* Ensure the same height as inputs */
+    line-height: normal; /* Prevent shrinking */
+    border: 0px solid #ffcfcf;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 16px;
+    background: #f7c9e4;
+    color: #ec30a1;
+    appearance: none; /* Remove default dropdown styling */
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    width: 70%;
+}
+
+/* Soft Focus Effect */
+.title-select:focus, .new-title-input:focus, .amount-input:focus {
+    border-color: #87CEFA;
+    background: #fff4fa;
+    outline: none;
+    box-shadow: 0 0 2px rgba(250, 217, 135, 0.5);
+}
+
+/* 🔘 Buttons */
+button {
+    background: #f7c9e4;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.2s ease-in-out;
+}
+
+/*button:hover {
+    background: #ec30a1;
+}*/
+
+button-cry {
+    background: #f6d365;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.2s ease-in-out;
+}
+
+
+button-x {
+    background: #f6d365;
+    border: none;
+    padding: 10px;
+    margin-left: 0px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.2s ease-in-out;
+    padding: 0px 10px;
+}
+
+.save {
+    background: #e9c26d;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background 0.2s ease-in-out;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.save:hover {
+    background: #e5a51a;
+}
+
+/* ❌ Delete Button */
+.delete-btn {
+    background: #ff7f7f;
+    color: white;
+    font-weight: bold;
+    border-radius: 10%;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-btn:hover {
+    background: #ff4f4f;
+}
+
+/* 📌 Align Dropdown Properly */
+.title-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 220px;
+}
+
+/* 📌 Fix for Dropdown Height Issues */
+.title-select::-ms-expand {
+    display: none;
+}
+
+/* 🎭 Dropdown Menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid black;
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0px 2px 2px rgba(250, 217, 135, 0.5);
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: lightgray;
+}
+
+/*-------------/*
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: black;
+    padding: 20px;
+    border-radius: 30px;
+    margin: 10px;
+}
+
+.navbar a {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    margin: 0 15px;
+}
+
+/* In-browser confirmation box */
+.delete-confirmation {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    width: 250px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.confirm-btn {
+    background: #ff4f4f;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cancel-btn {
+    background: #ccc;
+    border: none;
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.confirm-btn:hover {
+    background: #d13f3f;
+}
+
+.cancel-btn:hover {
+    background: #bbb;
+}
+
+
+/* Notification banner */
+.notification-banner {
+    position: fixed;
+    top: 60px; /* Below the navbar */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out;
+    font-weight: bold;
+    min-width: 250px;
+    text-align: center;
+}
+
+/* Error state */
+.notification-banner.error {
+    background: #ff4f4f;
+}
+
+/* Hidden state */
+.hidden {
+    opacity: 0;
+    display: none;
+}

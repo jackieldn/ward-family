@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Equity Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="/" class="home-icon">The Ward Family</a>
+        <nav class="nav-links">
+            <a href="/catify">Catify</a>
+            <a href="/create">Budget</a>
+            <a href="/report" class="active">Report</a>
+            <a href="/equity" class="active">Equity</a>
+        </nav>
+    </header>
+
+    <div class="content-box-equity">
+        <h1>Update Mortgage Balance</h1>
+        <div class="summary-box-report">
+            <div class="summary-container">
+                <div class="category-box-report">
+                    <h3>Remaining Mortgage</h3>
+                    <p id="remaining-mortgage-summary">£0.00</p>
+                </div>
+                <div class="category-box-report">
+                    <h3>Principal Payments</h3>
+                    <p id="total-principal-summary">£0.00</p>
+                </div>
+                <div class="category-box-report">
+                    <h3>Total Interest Paid</h3>
+                    <p id="total-interest-summary">£0.00</p> <!-- Empty for now -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="date-selection">
+            <div class="date-group">
+                <label for="equity-date">Date:</label>
+                <input type="date" id="equity-date" required>
+            </div>
+        
+            <div class="date-group">
+                <label for="current-valuation">Valuation (£):</label>
+                <input type="number" id="current-valuation" step="1" required>
+            </div>
+        
+            <div class="date-group">
+                <label for="principal-payment">Principal Payment (£):</label>
+                <input type="number" id="principal-payment" step="1" required>
+            </div>
+        
+            <!-- Fix: Replace button-cry with a standard button -->
+            <button id="submit-equity">Save</button>
+        </div>        
+        
+        <h2>Equity History</h2>
+        <div class="budget-summary-container" id="equity-history"></div>
+        <table>
+            <tbody id="equity-table-body"></tbody>
+        </table>       
+
+    </div>
+
+    <script src="{{ url_for('static', filename='house_equity.js') }}"></script>
+</body>
+</html>
