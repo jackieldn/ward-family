@@ -46,58 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /* ==========================
-    DELETE EXPENSE FUNCTION 
-========================== */
-
-let deleteTarget = null; // Store which button triggered the delete confirmation
-
-function deleteExpense(expenseId, buttonElement) {
-    console.log("🛠️ Deleting Expense with ID:", expenseId); // Debugging log
-
-    const confirmationBox = document.getElementById("delete-confirmation");
-    const deleteMessage = document.getElementById("delete-message");
-
-    deleteMessage.innerHTML = `Are you sure you want to delete this expense?`;
-    confirmationBox.classList.remove("hidden");
-
-    deleteTarget = { expenseId: parseInt(expenseId, 10), buttonElement };  // Ensure it's an integer
-}
-
-document.getElementById("confirm-delete").addEventListener("click", function () {
-    if (!deleteTarget) return;
-
-    console.log("🚀 Sending delete request for ID:", deleteTarget.expenseId); // Debugging log
-
-    fetch('/delete-expense', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: deleteTarget.expenseId })  // Send only `id`
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("✅ Server Response:", data); // Debugging log
-        if (data.success) {
-            showNotification("✅ Expense deleted successfully!", "success");
-
-            // Remove the expense entry from the UI
-            const budgetItem = deleteTarget.buttonElement.closest(".budget-item");
-            if (budgetItem) {
-                budgetItem.remove();
-            }
-
-            document.getElementById("delete-confirmation").classList.add("hidden");
-
-            // Refresh budget data
-            fetchBudgetData();
-        } else {
-            showNotification("❌ Failed to delete expense.", "error");
-        }
-    })
-    .catch(error => console.error("❌ Error deleting expense:", error));
-});
-
-
-/* ==========================
     BANNER NOTIFICATION
 ========================== */
 
@@ -191,17 +139,7 @@ function fetchBudgetData() {
 
                 let titleHTML = `<div class='category-header'>${category}</div>`;
                 let itemsHTML = "<div class='budget-items-container'>";
-                let categoryTotal = 0;
-
-                categoryMap[category].forEach(expense => {
-                    categoryTotal += parseFloat(expense.amount);
-                    itemsHTML += `
-                        <div class='budget-item'>
-<button class="delete-expense" onclick="deleteExpense(${expense.id}, this)">❌</button>
-                            <span>${expense.title}</span>
-                            <span>£${parseFloat(expense.amount).toFixed(2)}</span>
-                        </div>`;
-                });                                       
+                let categoryTotal = 0;                                     
 
                 itemsHTML += "</div>";
 

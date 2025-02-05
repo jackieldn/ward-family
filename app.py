@@ -438,39 +438,6 @@ def add_expense():
     except Exception as e:
         return jsonify({"error": "Database error", "message": str(e)}), 500
 
-# Delete Expense
-
-@app.route('/delete-expense', methods=['POST'])
-def delete_expense():
-    try:
-        data = request.get_json()
-        print("🔍 Received delete request:", data)  # Debugging log
-
-        if not data or "id" not in data:
-            return jsonify({"success": False, "message": "Missing expense ID"}), 400
-
-        try:
-            expense_id = int(data["id"])  # Ensure it's an integer
-        except (TypeError, ValueError):
-            return jsonify({"success": False, "message": "Invalid expense ID format"}), 400
-        print("🔍 Received delete request with ID:", expense_id)  # Debugging log
-
-
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
-
-        cursor.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
-        conn.commit()
-        conn.close()
-
-        print("✅ Successfully deleted expense with ID:", expense_id)
-        return jsonify({"success": True, "message": "Expense deleted successfully!"})
-    except Exception as e:
-        print("❌ Error in delete-expense:", str(e))  # Debugging log
-        return jsonify({"error": "Database error", "message": str(e)}), 500
-
-
-
 # Fetch Expense Titles
 @app.route('/get-titles')
 def get_titles():
