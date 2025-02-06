@@ -67,19 +67,12 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error("Error saving medication:", error));
     });
 
-    // Delete medication
-    function deleteMedication(medId) {
-        fetch(`/delete-medication/${medId}`, { method: "DELETE" })
-            .then(() => fetchMedications()) // Refresh list
-            .catch(error => console.error("Error deleting medication:", error));
-    }
-
     // Update medication list UI
     function updateMedicationList(meds) {
         medList.innerHTML = meds.length ? "" : "<li>No medications added</li>";
         meds.forEach(med => {
             const li = document.createElement("li");
-            li.innerHTML = `${med.name} - ${med.dosage} (${med.frequency}, ${med.daily_count}x per day) - Starts on ${med.start_date}`;
+            li.innerHTML = `${med.name} - ${med.dosage} (${med.frequency}, ${med.daily_count}x) - Starts on ${med.start_date}`;
             medList.appendChild(li);
         });
     }

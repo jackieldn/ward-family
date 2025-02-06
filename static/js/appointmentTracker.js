@@ -40,18 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error("Error saving appointment:", error));
     });
 
-    function deleteAppointment(apptId) {
-        fetch(`/delete-appointment/${apptId}`, { method: "DELETE" })
-            .then(() => fetchAppointments())
-            .catch(error => console.error("Error deleting appointment:", error));
-    }
-
     function updateAppointmentsList(appts) {
-        appointmentsList.innerHTML = appts.length ? "" : "<li>No upcoming appointments</li>";
+        appointmentsList.innerHTML = appts.length ? "" : "<li>No reminders</li>";
         appts.forEach(appt => {
             const li = document.createElement("li");
-            li.innerHTML = `${appt.date} - ${appt.title} 
-                <button class="remove-appointment" onclick="deleteAppointment(${appt.id})">X</button>`;
+            li.innerHTML = `
+                <strong>${appt.date}</strong> - ${appt.title}
+                ${appt.notes ? `<p class="appt-notes">${appt.notes}</p>` : ""}
+            `;
             appointmentsList.appendChild(li);
         });
     }

@@ -56,7 +56,7 @@
 h3 {
     font-size: 25px;
     font-weight: bold;
-    text-align: left;
+    text-align: center;
     margin-bottom: 25px;
     margin-left: 0px;
     color: #333;
@@ -86,7 +86,7 @@ canvas {
 @media (min-width: 600px) {
     .budget-summary-container {
         column-count: 2; /* Uses column layout for natural packing */
-        column-gap: 20px;
+        column-gap: 60px;
     }
 }
 

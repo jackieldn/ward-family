@@ -27,16 +27,7 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <header class="navbar">
-        <a href="/" class="home-icon">The Ward Family</a>
-        <nav class="nav-links">
-            <a href="/catify" class="active">Catify</a>
-            <a href="/create">Budget</a>
-            <a href="/report">Report</a>
-            <a href="/equity">Equity</a>
-        </nav>
-    </header>
+    {% include 'navbar.html' %}
 
     <h1>Catify Health Centre</h1>
 
@@ -136,37 +127,25 @@
         <ul id="medication-list">
             <li>No medications added</li>
         </ul>
-    
-        <!-- Upcoming Medications -->
-        <h3>Upcoming Medications</h3>
-        <ul id="upcoming-medications">
-            <li>No upcoming medications</li>
-        </ul>
     </div>
     
 
     <div class="content-box">
-        <h2>Upcoming Appointments</h2>
+        <h2>Reminders</h2>
     
         <!-- Add Appointment Form -->
         <div class="appointment-form">
-            <input type="text" id="appointment-title" placeholder="Appointment Title">
+            <input type="text" id="appointment-title" placeholder="Title">
             <input type="date" id="appointment-date">
             <input type="time" id="appointment-time">
             <input type="text" id="appointment-notes" placeholder="Notes (Optional)">
-            <button id="add-appointment" class="save">Add Appointment</button>
+            <button id="add-appointment" class="save">Add Reminder</button>
         </div>
     
         <!-- List of Upcoming Appointments -->
         <ul id="appointments-list">
-            <li>No upcoming appointments</li>
+            <li>No reminders</li>
         </ul>
-    
-        <!-- Appointment Calendar -->
-        <div class="calendar-container">
-            <h3>Appointment Calendar</h3>
-            <div id="calendar"></div>
-        </div>
     </div>
     
 </body>

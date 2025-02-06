@@ -62,16 +62,6 @@ def get_medications(cat_name):
 
     return jsonify([{"id": row[0], "name": row[1], "dosage": row[2], "frequency": row[3], "daily_count": row[4]} for row in meds])
 
-@app.route("/delete-medication/<int:med_id>", methods=["DELETE"])
-def delete_medication(med_id):
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM medications WHERE id = ?", (med_id,))
-    conn.commit()
-    conn.close()
-
-    return jsonify({"message": "Medication deleted successfully!"})
-
 ### **APPOINTMENT API** ###
 @app.route("/add-appointment", methods=["POST"])
 def add_appointment():
@@ -100,16 +90,6 @@ def get_appointments(cat_name):
     conn.close()
 
     return jsonify([{"id": row[0], "title": row[1], "date": row[2], "time": row[3], "notes": row[4]} for row in appts])
-
-@app.route("/delete-appointment/<int:appt_id>", methods=["DELETE"])
-def delete_appointment(appt_id):
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM appointments WHERE id = ?", (appt_id,))
-    conn.commit()
-    conn.close()
-
-    return jsonify({"message": "Appointment deleted successfully!"})
 
 if __name__ == "__main__":
     app.run(debug=True)

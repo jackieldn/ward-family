@@ -111,13 +111,20 @@ h1 {
 }
 
 .category-box-report {
+    flex: 1 1 180px; /* Ensures flexible sizing */
     background: #fff;
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 12px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    min-width: 180px; /* Ensures minimum size */
-    flex: 1 1 180px; /* Allows flex behavior */
+    min-width: 180px;
+    max-width: 250px;
+}
+
+
+.category-box-report p {
+    margin-top: 10px;
+    font-size: 23px;
 }
 
 .category-name {
@@ -165,13 +172,13 @@ h1 {
 
 /* Ensure title-amount blocks are aligned left and spaced properly */
 .summary-container {
-    display: flex;
-    justify-content: center; /* Centers the inner boxes */
-    align-items: center; /* Centers vertically */
-    gap: 15px; /* Adjust gap as needed */
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Auto-adjusts columns */
+    gap: 15px; /* Adjusts spacing between boxes */
+    justify-content: center;
     width: 100%;
-    max-width: 800px; /* Ensures it matches parent width */
+    max-width: 1100px; /* Expands grid area */
+    margin: auto;
 }
 
 .budget-block {
@@ -190,7 +197,7 @@ h1 {
     padding: 30px;
     max-width: 1100px;
     min-width: 400px; /* Ensures the box is at least 400px wide */
-    width: 100%;
+    width: 80%;
     margin: 0 auto 20px auto;
     border-radius: 25px;
     text-align: center;

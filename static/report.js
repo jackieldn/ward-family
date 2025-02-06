@@ -136,18 +136,27 @@ function fetchBudgetData() {
             Object.keys(categoryMap).forEach(category => {
                 const categoryDiv = document.createElement("div");
                 categoryDiv.classList.add("budget-category-box");
-
+            
                 let titleHTML = `<div class='category-header'>${category}</div>`;
                 let itemsHTML = "<div class='budget-items-container'>";
-                let categoryTotal = 0;                                     
-
+                let categoryTotal = 0;
+            
+                categoryMap[category].forEach(expense => {
+                    itemsHTML += `<div class="budget-item">
+                        <span class="item-title">${expense.title}</span>
+                        <span class="item-amount">£${expense.amount.toFixed(2)}</span>
+                    </div>`;
+                    categoryTotal += expense.amount;
+                });
+            
                 itemsHTML += "</div>";
-
-                const totalHTML = `<div class='budget-total'>£${categoryTotal.toFixed(2)}</div>`;
-
+            
+                const totalHTML = `<div class='budget-total'>Total: £${categoryTotal.toFixed(2)}</div>`;
+            
                 categoryDiv.innerHTML = titleHTML + itemsHTML + totalHTML;
                 container.appendChild(categoryDiv);
-            });
+            });            
+            
         })
         .catch(error => console.error("❌ Error loading budget data:", error));
 }

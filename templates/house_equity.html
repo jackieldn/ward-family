@@ -9,17 +9,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+
+     <!-- Fonts -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Ovo&family=Radley&display=swap" rel="stylesheet">
+ 
 </head>
 <body>
-    <header class="navbar">
-        <a href="/" class="home-icon">The Ward Family</a>
-        <nav class="nav-links">
-            <a href="/catify">Catify</a>
-            <a href="/create">Budget</a>
-            <a href="/report" class="active">Report</a>
-            <a href="/equity" class="active">Equity</a>
-        </nav>
-    </header>
+    {% include 'navbar.html' %}
 
     <div class="content-box-equity">
         <h1>Update Mortgage Balance</h1>

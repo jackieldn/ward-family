@@ -51,3 +51,30 @@ function renderSavingsChart(months, totals) {
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
     });
 }
+
+function fetchAndRenderCurrentMonthData() {
+    fetch("/get-current-month-data")
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Current month data received:", data);
+            const container = document.getElementById("currentMonthData");
+            container.innerHTML = "";
+
+            if (data.length === 0) {
+                container.innerHTML = "<p>No data available for this month.</p>";
+                return;
+            }
+
+            data.forEach(entry => {
+                const div = document.createElement("div");
+                div.classList.add("category-box-report");
+                div.innerHTML = `
+                    <h3>${entry.category}</h3>
+                    <p>£${entry.total.toFixed(2)}</p>
+                `;
+                container.appendChild(div);
+            });
+        })
+        .catch(error => console.error("❌ Error fetching current month data:", error));
+}
+

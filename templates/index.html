@@ -16,16 +16,7 @@
     <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
 </head>
 
-<body>
-    <header class="navbar">
-        <a href="/" class="home-icon">The Ward Family</a>
-        <nav class="nav-links">
-            <a href="/catify">Catify</a>
-            <a href="/create">Budget</a>
-            <a href="/report" class="active">Report</a>
-            <a href="/equity" class="active">Equity</a>
-        </nav>
-    </header>
+{% include 'navbar.html' %}
 
     <div class="dashboard">
         <h1>Hello, Ward Family</h1>
@@ -39,7 +30,7 @@
     
             <div class="graphs-container">
                 <div class="graph-container">
-                    <h3>Monthly Total Expenses</h3>
+                    <h3>Monthly Total Transfers</h3>
                     <div class="graph-box graph-box-utilities">
                         <canvas id="utilitiesChart"></canvas>
                     </div>
