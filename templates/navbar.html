@@ -1,9 +1,27 @@
 <header class="navbar">
     <a href="/" class="home-icon">The Ward Family</a>
+
+    <!-- Hamburger Icon for Mobile -->
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
     <nav class="nav-links">
         <a href="/catify">Catify</a>
-        <a href="/create">Budget</a>
-        <a href="/report">Report</a>
-        <a href="/equity">Equity</a>
+
+        <!-- Dropdown for "Painful Budget" -->
+        <div class="dropdown">
+            <button class="dropbtn">Painful Budget</button>
+            <div class="dropdown-content">
+                <a href="/create">Budget</a>
+                <a href="/report">Report</a>
+                <a href="/equity">Equity</a>
+                <a href="/balances">Balances</a>
+            </div>
+        </div>
     </nav>
 </header>
+
+<script>
+function toggleMenu() {
+    document.querySelector('.nav-links').classList.toggle('active');
+}
+</script>

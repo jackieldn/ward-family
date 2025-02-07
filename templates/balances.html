@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balances</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Ovo&family=Radley&display=swap" rel="stylesheet">
+    <script src="{{ url_for('static', filename='balances.js') }}" defer></script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="budget-container">
+        <h1>Monthly Savings Balances</h1>
+
+        <div class="date-selection">
+            <label for="month">Month:</label>
+            <select id="month"></select>
+            <label for="year">Year:</label>
+            <input type="number" id="year" value="2025">
+            <button id="fetch-balances">Load Balances</button>
+        </div>
+        
+        <div class="content-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Current Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="balances-list">
+                    <!-- Balances will be inserted dynamically -->
+                </tbody>
+            </table>
+        </div>
+        
+        <button id="update-balances" class="save">Update Balances</button>
+
+        <h2>Add New Monthly Balance</h2>
+        <div class="content-box">
+            <label for="new-month">Month:</label>
+            <select id="new-month"></select>
+            <label for="new-year">Year:</label>
+            <input type="number" id="new-year" value="2025">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Current Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Joint Savings</td>
+                        <td><input type="number" id="new-joint-savings" value="0"></td>
+                    </tr>
+                    <tr>
+                        <td>Jack LISA</td>
+                        <td><input type="number" id="new-jack-lisa" value="0"></td>
+                    </tr>
+                    <tr>
+                        <td>Richard LISA</td>
+                        <td><input type="number" id="new-richard-lisa" value="0"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="add-new-balances" class="save">Add New Balances</button>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='balances.js') }}" defer></script>
+</body>
+</html>

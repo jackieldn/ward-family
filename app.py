@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, jsonify
 import sqlite3
 from email_sender import send_budget_report
 from report_utils import report_data
+from savings import savings_bp, init_savings_db
 
 app = Flask(__name__)
+app.register_blueprint(savings_bp)
 
 # Main Dashboard
 @app.route('/')
@@ -452,6 +454,8 @@ def get_titles():
     except Exception as e:
         print(f"❌ Error fetching titles: {e}")
         return jsonify({"error": "Database error"}), 500
+    
 
 if __name__ == '__main__':
+    init_savings_db()
     app.run(debug=True)
