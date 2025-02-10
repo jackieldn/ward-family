@@ -82,6 +82,10 @@ h1 {
     margin-top: 20px;
 }
 
+.content-box p {
+text-align: center;
+}
+
 .content-box-equity {
     background: none;
     padding: 30px;

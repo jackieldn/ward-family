@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
+import requests
+from config import TFL_API_BASE_URL, TFL_TUBE_STATUS_ENDPOINT
 from email_sender import send_budget_report
 from report_utils import report_data
 from savings import savings_bp, init_savings_db
@@ -15,6 +17,17 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1, x_
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/tfl-updates')
+def tfl_updates():
+    return render_template('tfl-updates.html')
+
+@app.route('/get-tfl-status')
+def get_tfl_status():
+    response = requests.get(f"{TFL_API_BASE_URL}{TFL_TUBE_STATUS_ENDPOINT}")
+    if response.status_code == 200:
+        return jsonify(response.json())
+    return jsonify({"error": "Failed to fetch data from TfL API"}), response.status_code
 
 # Database Connection
 def connect_db():

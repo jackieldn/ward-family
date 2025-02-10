@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Dashboard</title>
+    <title>TfL Updates</title>
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
 <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
 <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
@@ -17,47 +17,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='tfl.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <script src="{{ url_for('static', filename='tfl-updates.js') }}" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script src="{{ url_for('static', filename='tfl-updates.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Ovo&family=Radley&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
 </head>
-
-{% include 'navbar.html' %}
-
-    <div class="dashboard">
-        <h1>Hello, Ward Family</h1>
-        
-        <!-- TfL Widget -->
-        <div class="content-box">
-            <div id="tfl-status" class="status-grid"></div>
-            <p id="last-updated">Last updated: --:--:--</p>
-        </div>
-         <!-- Budget Widget -->
-        <div class="content-box">
-            <h3>Current Month</h3>
-            <div class="summary-box">
-                <div id="currentMonthData" class="summary-container"></div>
-            </div>
-    
-            <div class="graphs-container">
-                <div class="graph-container">
-                    <h3>Monthly Total Transfers</h3>
-                    <div class="graph-box graph-box-utilities">
-                        <canvas id="utilitiesChart"></canvas>
-                    </div>
-                </div>
-    
-                <div class="graph-container">
-                    <h3>Savings Tracker</h3>
-                    <div class="graph-box graph-box-savings">
-                        <canvas id="savingsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body>
+    {% include 'navbar.html' %}
+    <div class="content-box">
+        <h1>TfL Service Updates</h1>
+        <div id="tfl-status" class="status-grid"></div>
+        <p id="last-updated">Last updated: --:--:--</p>
     </div>
 </body>
 </html>
