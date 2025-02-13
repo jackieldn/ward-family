@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function fetchAppointments() {
-        fetch(`/get-appointments/${selectedCat}`)
+        fetch(`/catify/get-appointments/${selectedCat}`)
             .then(response => response.json())
             .then(updateAppointmentsList)
             .catch(error => console.error("Error fetching appointments:", error));
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch("/add-appointment", {
+        fetch("/catify/add-appointment", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ cat_name: selectedCat, title, date, time, notes })

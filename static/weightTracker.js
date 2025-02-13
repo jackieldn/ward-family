@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fetch weight history from API
     function fetchWeightHistory() {
-        fetch(`/get-weights/${selectedCat}`)
+        fetch(`/catify/get-weights/${selectedCat}`)
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch("/add-weight", {
+        fetch("/catify/add-weight", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ cat_name: selectedCat, date: date, weight: parseFloat(weight) })

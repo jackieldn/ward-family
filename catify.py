@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 import sqlite3
 
-app = Flask(__name__)
+catify_bp = Blueprint("catify", __name__)
 
 # Helper Function to Connect to Database
 def connect_db():
     return sqlite3.connect("catify.db")
 
 ### **WEIGHT TRACKING API** ###
-@app.route("/add-weight", methods=["POST"])
+@catify_bp.route("/add-weight", methods=["POST"])
 def add_weight():
     data = request.get_json()
     cat_name = data["cat_name"]
@@ -23,7 +23,7 @@ def add_weight():
 
     return jsonify({"message": "Weight saved successfully!"})
 
-@app.route("/get-weights/<cat_name>", methods=["GET"])
+@catify_bp.route("/get-weights/<cat_name>", methods=["GET"])
 def get_weights(cat_name):
     conn = connect_db()
     cursor = conn.cursor()
@@ -34,7 +34,7 @@ def get_weights(cat_name):
     return jsonify([{"date": row[0], "weight": row[1]} for row in weights])
 
 ### **MEDICATION API** ###
-@app.route("/add-medication", methods=["POST"])
+@catify_bp.route("/add-medication", methods=["POST"])
 def add_medication():
     data = request.get_json()
     cat_name = data["cat_name"]
@@ -52,7 +52,7 @@ def add_medication():
 
     return jsonify({"message": "Medication saved successfully!"})
 
-@app.route("/get-medications/<cat_name>", methods=["GET"])
+@catify_bp.route("/get-medications/<cat_name>", methods=["GET"])
 def get_medications(cat_name):
     conn = connect_db()
     cursor = conn.cursor()
@@ -63,7 +63,7 @@ def get_medications(cat_name):
     return jsonify([{"id": row[0], "name": row[1], "dosage": row[2], "frequency": row[3], "daily_count": row[4]} for row in meds])
 
 ### **APPOINTMENT API** ###
-@app.route("/add-appointment", methods=["POST"])
+@catify_bp.route("/add-appointment", methods=["POST"])
 def add_appointment():
     data = request.get_json()
     cat_name = data["cat_name"]
@@ -81,7 +81,7 @@ def add_appointment():
 
     return jsonify({"message": "Appointment saved successfully!"})
 
-@app.route("/get-appointments/<cat_name>", methods=["GET"])
+@catify_bp.route("/get-appointments/<cat_name>", methods=["GET"])
 def get_appointments(cat_name):
     conn = connect_db()
     cursor = conn.cursor()
@@ -91,5 +91,8 @@ def get_appointments(cat_name):
 
     return jsonify([{"id": row[0], "title": row[1], "date": row[2], "time": row[3], "notes": row[4]} for row in appts])
 
-if __name__ == "__main__":
-    app.run(debug=True)
+from flask import render_template
+
+@catify_bp.route("/")
+def catify_home():
+    return render_template("catify.html")

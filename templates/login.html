@@ -72,7 +72,7 @@
             margin-bottom: 20px;
         }
 
-        .login-button:active {
+        .login-btn:active {
             transform: scale(0.98);
         }
 
@@ -89,7 +89,7 @@
     </style>
 </head>
 <body>
-    <form method="POST">
+    <div class="login-container">
         <h2>Login</h2>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -98,28 +98,11 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>    
-    <div class="login-container">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button class="login-btn" onclick="login()">Login</button>
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button class="login-btn" type="submit">Login</button>
+        </form>
     </div>
-    
-    <script>
-        function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            
-            if (username === "admin" && password === "password") {
-                alert("Login successful!");
-            } else {
-                alert("Invalid credentials!");
-            }
-        }
-    </script>
 </body>
 </html>

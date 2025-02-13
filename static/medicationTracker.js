@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fetch medications from API
     function fetchMedications() {
-        fetch(`/get-medications/${selectedCat}`)
+        fetch(`/catify/get-medications/${selectedCat}`)
             .then(response => response.json())
             .then(updateMedicationList)
             .catch(error => console.error("Error fetching medications:", error));
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch("/add-medication", {
+        fetch("/catify/add-medication", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
