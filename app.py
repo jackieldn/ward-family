@@ -30,6 +30,13 @@ app.register_blueprint(auth)
 app.register_blueprint(savings_bp)
 app.register_blueprint(catify_bp, url_prefix="/catify")
 
+@auth.before_request
+@savings_bp.before_request
+@catify_bp.before_request
+def require_login():
+    if 'user_id' not in session and request.endpoint not in ['auth.login', 'auth.register']:
+        return redirect(url_for('auth.login'))
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
