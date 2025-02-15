@@ -27,7 +27,24 @@ function renderMonthlyTotalChart(months, totals) {
             labels: months.map(month => new Date(`${month}-01T00:00:00`).toLocaleString('en-GB', { month: 'short' })),
             datasets: [{ label: "Monthly Total", data: totals, backgroundColor: "rgba(207, 93, 162, 1)", borderRadius: 20 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 6
+                    }
+                }
+            }
+        }
+        
     });
 }
 

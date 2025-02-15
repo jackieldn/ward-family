@@ -224,8 +224,9 @@ h1 {
 .graph-box {
     padding: 15px;
     border-radius: 20px;
-    min-width: 400px; /* Ensures each box has a minimum width */
-    width: 22%; /* Default: Side-by-side */
+    max-width: 300px;
+    min-height: 150px;
+    width: 100%; /* Default: Side-by-side */
     text-align: center;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;

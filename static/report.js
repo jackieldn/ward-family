@@ -81,9 +81,16 @@ function fetchBudgetData() {
         .then(response => response.json())
         .then(data => {
             console.log("✅ Report data received:", data);
+            
+            if (!Array.isArray(data)) {
+                console.error("❌ Unexpected response format:", data);
+                showNotification("❌ Error: Report data is not in the expected format.", "error");
+                return;
+            }
+        
             const container = document.getElementById("budget-summary");
             container.innerHTML = "";
-
+        
             let total = 0;
             let savingsTotal = 0;
             let sharedExpenses = 0;
@@ -91,9 +98,11 @@ function fetchBudgetData() {
             let giftPot = 0;
             let jackSavings = 0;
             let richardSavings = 0;
-
+        
             const categoryMap = {};
-            data.expenses.forEach(expense => {
+            
+            // Update for array response (no 'expenses' property)
+            data.forEach(expense => {
                 total += parseFloat(expense.amount);
                 
                 if (["Housing", "Food", "Utilities", "Pet", "Miscellaneous"].includes(expense.category)) {
@@ -114,24 +123,23 @@ function fetchBudgetData() {
                 if (expense.category === "Savings") {
                     savingsTotal += parseFloat(expense.amount);
                 }
-
+        
                 if (!categoryMap[expense.category]) {
                     categoryMap[expense.category] = [];
                 }
                 categoryMap[expense.category].push(expense);
             });
-
+        
             // ✅ Restore Transfer Calculations
             const sharedTotal = (sharedExpenses + jointSavings + giftPot) / 2;
             const jackTransfer = sharedTotal + jackSavings;
             const richardTransfer = sharedTotal + richardSavings;
-
-            // ✅ Restore Total Displays
+        
             document.getElementById("jack-transfer").innerText = `£${jackTransfer.toFixed(2)}`;
             document.getElementById("richard-transfer").innerText = `£${richardTransfer.toFixed(2)}`;
             document.getElementById("overall-total").innerText = `£${total.toFixed(2)}`;
             document.getElementById("total-savings").innerText = `£${savingsTotal.toFixed(2)}`;
-
+        
             // ✅ Generate Budget Categories
             Object.keys(categoryMap).forEach(category => {
                 const categoryDiv = document.createElement("div");
@@ -155,8 +163,10 @@ function fetchBudgetData() {
             
                 categoryDiv.innerHTML = titleHTML + itemsHTML + totalHTML;
                 container.appendChild(categoryDiv);
-            });            
-            
+            });
         })
-        .catch(error => console.error("❌ Error loading budget data:", error));
-}
+        .catch(error => {
+            console.error("❌ Error loading budget data:", error);
+            showNotification("❌ Failed to load budget data.", "error");
+        });
+    }

@@ -23,13 +23,6 @@
     margin: auto;
 }
 
-@media (max-width: 800px) {
-    .graph-box {
-        width: 100%; /* Expands fully when stacked */
-        min-width: unset; /* Overrides the 400px minimum width */
-    }
-}
-
 /* Individual Box Colours (No Changes Here) */
 .graph-box-rent { background: #B7CBEB; }
 .graph-box-utilities { background: #F4B8DC; }
@@ -70,17 +63,24 @@ h3 {
 }
 
 /* Responsive: Adjusts layout for smaller screens */
-@media (max-width: 800px) {
+@media (max-width: 600px) {
     .graph-box {
-        width: 100%; /* Makes each graph take full width on mobile */
-        min-width: unset;
+        overflow-x: hidden; /* Prevents overflow */
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
-}
 
-/* Make graphs responsive */
-canvas {
-    width: 100% !important;
-    height: 250px !important;
+    .graph-container canvas {
+        max-width: 100%;
+        height: auto !important;
+        display: block;
+    }
+
+    .graph-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
 }
 
 @media (min-width: 600px) {
