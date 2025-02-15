@@ -1,7 +1,8 @@
-from flask import Flask, render_template, redirect, url_for, session, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, request, jsonify
 import os
 import sqlite3
 import requests
+from functools import wraps
 from auth import auth
 from config import SQLALCHEMY_DATABASE_URI
 from config import SECRET_KEY, TFL_API_BASE_URL, TFL_TUBE_STATUS_ENDPOINT
@@ -29,26 +30,38 @@ app.register_blueprint(auth)
 app.register_blueprint(savings_bp)
 app.register_blueprint(catify_bp, url_prefix="/catify")
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))  # Redirect to login if not logged in
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Utility function for database connection
 def connect_db():
     return sqlite3.connect("database.db")
 
 # Routes
 @app.route('/')
+@login_required
 def index():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
     return render_template('index.html')
 
 @app.route('/tfl-updates')
+@login_required
 def tfl_updates():
     return render_template('tfl-updates.html')
 
 @app.route('/create')
+@login_required
 def create_budget():
     return render_template('create.html')
 
 @app.route('/get-tfl-status')
+@login_required
 def get_tfl_status():
     response = requests.get(f"{TFL_API_BASE_URL}{TFL_TUBE_STATUS_ENDPOINT}")
     if response.status_code == 200:
@@ -56,14 +69,17 @@ def get_tfl_status():
     return jsonify({"error": "Failed to fetch data from TfL API"}), response.status_code
 
 @app.route('/report')
+@login_required
 def report_page():
     return render_template('report.html')
 
 @app.route('/equity')
+@login_required
 def house_equity_page():
     return render_template('house_equity.html')
 
 @app.route('/get-monthly-total-data', methods=['GET'])
+@login_required
 def get_monthly_total_data():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
@@ -80,6 +96,7 @@ def get_monthly_total_data():
     return jsonify(response)
 
 @app.route('/get-current-month-data', methods=['GET'])
+@login_required
 def get_current_month_data():
     current_month = datetime.now().strftime("%Y-%m")
     
@@ -96,6 +113,7 @@ def get_current_month_data():
 
 # APIs
 @app.route("/add-weight", methods=["POST"])
+@login_required
 def add_weight():
     data = request.get_json()
     conn = connect_db()
@@ -107,6 +125,7 @@ def add_weight():
     return jsonify({"message": "Weight saved successfully!"})
 
 @app.route("/get-weights/<cat_name>", methods=["GET"])
+@login_required
 def get_weights(cat_name):
     conn = connect_db()
     cursor = conn.cursor()
@@ -117,14 +136,17 @@ def get_weights(cat_name):
 
 # Budget data save
 @app.route('/get-categories')
+@login_required
 def get_categories():
     return jsonify({"categories": ["Housing", "Shopping", "Utilities", "Pet", "Miscellaneous", "Savings", "Debt"]})
 
 @app.route('/get-titles')
+@login_required
 def get_titles():
     return jsonify({"titles": ["Rent", "Council Tax", "Groceries", "Household", "Cat Food", "Gas", "Electricity", "Gas", "Water", "BT", "Internet", "TV Licensing", "Cat Insurance", "Cat Health Pack", "Cat Medication", "Netflix", "Credit Ladder", "Camera", "Phone Insurance", "Apple One", "Duolingo", "Joint Savings", "Richard Savings", "Jack Savings", "Gift Pot", "Additional Savings"]})
 
 @app.route('/add', methods=["POST"])
+@login_required
 def add_budget():
     data = request.get_json()
     date = data["date"]
@@ -144,6 +166,7 @@ def add_budget():
 # House Equity Data
 INITIAL_MORTGAGE = 342000
 @app.route('/add-equity', methods=['POST'])
+@login_required
 def add_equity():
     try:
         data = request.get_json()
@@ -181,6 +204,7 @@ def add_equity():
         return jsonify({"error": "Database error", "message": str(e)}), 500
 
 @app.route('/get-equity', methods=['GET'])
+@login_required
 def get_equity():
     try:
         conn = sqlite3.connect("house_equity.db")
@@ -227,6 +251,7 @@ def get_equity():
     
 # Fetch Report Data
 @app.route('/report-data/<year>/<month>')
+@login_required
 def report_data(year, month):
     conn = connect_db()
     cursor = conn.cursor()
