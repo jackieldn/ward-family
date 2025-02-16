@@ -24,10 +24,32 @@
 </head>
 <body>
     {% include 'navbar.html' %}
-    <div class="content-box">
-        <h1>TfL Service Updates</h1>
-        <div id="tfl-status" class="status-grid"></div>
-        <p id="last-updated">Last updated: --:--:--</p>
-    </div>
+    <h1>TfL Updates</h1>
+    <div id="tfl-dashboard">
+        <!-- Left Column: Line Status -->
+        <div class="column left-column">
+          <div id="line-status-container">
+            <div class="widget-banner">Line Status</div>
+          </div>
+        </div>
+      
+        <!-- Right Column: Station Arrivals & Disruptions -->
+        <div class="column right-column">
+            <div id="disruptions-container">
+                <div class="widget-banner">Disruptions</div>
+                <div id="disruptions-list"></div>
+              </div>
+          <div id="station-selector-container">
+            <div class="station-banner">
+              <a href="#" class="station-tab active" data-station="bow">Bow</a>
+              <a href="#" class="station-tab" data-station="vauxhall">Vauxhall</a>
+              <a href="#" class="station-tab" data-station="embankment">Embankment</a>
+              <a href="#" class="station-tab" data-station="finchley">Finchley Central</a>
+            </div>
+            <div id="station-arrivals"></div>
+          </div>
+        </div>
+      </div>         
+  </div>  
 </body>
 </html>

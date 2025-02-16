@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, r
 import os
 import sqlite3
 import requests
+import re
 from functools import wraps
 from auth import auth
 from config import SQLALCHEMY_DATABASE_URI
@@ -73,7 +74,33 @@ def get_tfl_status():
     response = requests.get(f"{TFL_API_BASE_URL}{TFL_TUBE_STATUS_ENDPOINT}")
     if response.status_code == 200:
         return jsonify(response.json())
-    return jsonify({"error": "Failed to fetch data from TfL API"}), response.status_code
+    return jsonify({"error": "Failed to fetch data from TfL API"}), response.status_codes
+
+@app.route('/get-station-arrivals')
+@login_required
+def get_station_arrivals():
+    station_id = request.args.get('stationId')
+    api_url = f"{TFL_API_BASE_URL}/StopPoint/{station_id}/Arrivals"
+    response = requests.get(api_url)
+    arrivals = response.json() if response.ok else []
+
+    def clean_direction(platform_name):
+        # Extract direction like 'westbound' or 'northbound' using regex
+        match = re.search(r'(westbound|eastbound|northbound|southbound)', platform_name.lower())
+        return match.group(0) if match else 'unknown'
+
+    filtered = [
+        {
+            "line": a.get('lineName', 'Unknown'),
+            "destination": a.get('destinationName', 'Unknown'),
+            "direction": clean_direction(a.get('platformName', 'unknown')),
+            "eta": round(a.get('timeToStation', 0) / 60)
+        }
+        for a in arrivals
+    ]
+
+    print("Filtered Station Arrivals Data:", filtered)  # For debugging
+    return jsonify(filtered)
 
 @app.route('/report')
 @login_required
