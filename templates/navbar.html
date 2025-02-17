@@ -1,28 +1,53 @@
-<header class="navbar">
-    <a href="/" class="home-icon">The Ward Family</a>
+<!-- Desktop Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="sidebar-logo">
+        <h2 class="sidebar-title">Wardies</h2>
+    </div>
 
-    <!-- Hamburger Icon for Mobile -->
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-
-    <nav class="nav-links">
-        <a href="/catify">Catify</a>
-        <a href="/tfl-updates">TfL Updates</a>
-
-        <!-- Dropdown for "Painful Budget" -->
-        <div class="dropdown">
-            <button class="dropbtn">Painful Budget</button>
-            <div class="dropdown-content">
-                <a href="/create">Create Budget</a>
-                <a href="/report">Report</a>
-                <a href="/equity">Equity</a>
-                <a href="/balances">Balances</a>
-            </div>
-        </div>
+    <nav class="sidebar-nav">
+        <a href="/" class="nav-item"><span class="icon">&#x1F3E0;</span> Dashboard</a>
+        <a href="/catify" class="nav-item"><span class="icon">&#x1F63B;</span> Catify</a>
+        <a href="/tfl-updates" class="nav-item"><span class="icon">&#x1F68A;</span> Travel</a>
+        <div class="sidebar-divider"></div>
+        <a href="/create" class="nav-item"><span class="icon">&#x2795;</span> Add Budget</a>
+        <a href="/report" class="nav-item"><span class="icon">&#x1F4B3;</span> Report</a>
+        <a href="/balances" class="nav-item"><span class="icon">&#x1F4B0;</span> Balances</a>
+        <a href="/equity" class="nav-item"><span class="icon">&#x1F3E1;</span> Mortgage</a>
+        <div class="sidebar-divider"></div>
+        <a href="/logout" class="nav-item logout"><span class="icon">&#x1F511;</span> Logout</a>
     </nav>
-</header>
+</aside>
 
+<!-- Mobile Top Navbar -->
+<div class="mobile-navbar">
+    <div class="mobile-navbar-left">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="mobile-logo">
+        <h2 class="mobile-title">Wardies</h2>
+    </div>
+    <button class="menu-btn" onclick="toggleMobileMenu()">☰</button>
+</div>
+
+<!-- Mobile Dropdown Menu -->
+<div class="mobile-dropdown" id="mobileDropdown">
+    <nav class="mobile-nav">
+        <a href="/" class="nav-item"><span class="icon">&#x1F3E0;</span> Dashboard</a>
+        <a href="/catify" class="nav-item"><span class="icon">&#x1F63B;</span> Catify</a>
+        <a href="/tfl-updates" class="nav-item"><span class="icon">&#x1F68A;</span> Travel</a>
+        <div class="sidebar-divider"></div>
+        <a href="/create" class="nav-item"><span class="icon">&#x2795;</span> Add Budget</a>
+        <a href="/report" class="nav-item"><span class="icon">&#x1F4B3;</span> Report</a>
+        <a href="/balances" class="nav-item"><span class="icon">&#x1F4B0;</span> Balances</a>
+        <a href="/equity" class="nav-item"><span class="icon">&#x1F3E1;</span> Mortgage</a>
+        <div class="sidebar-divider"></div>
+        <a href="/logout" class="nav-item logout"><span class="icon">&#x1F511;</span> Logout</a>
+    </nav>
+</div>
+
+<!-- JavaScript for Toggle -->
 <script>
-function toggleMenu() {
-    document.querySelector('.nav-links').classList.toggle('active');
-}
+    function toggleMobileMenu() {
+        const dropdown = document.getElementById('mobileDropdown');
+        dropdown.classList.toggle('open');
+    }
 </script>

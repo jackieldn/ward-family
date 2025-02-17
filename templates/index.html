@@ -26,6 +26,9 @@
 </head>
 
 {% include 'navbar.html' %}
+<div class="main-content">
+    <!-- Main page content goes here -->
+</div>
 
     <div class="dashboard">
         <h1>Family Dashboard</h1>
@@ -35,10 +38,9 @@
             <div id="tfl-status" class="status-grid"></div>
             <p id="last-updated">Last updated: --:--:--</p>
         </div>
-         <!-- Budget Widget -->
-        <div class="content-box">
-            <h3>Current Month</h3>
-            <div class="summary-box">
+            <!-- Unified Summary Box -->
+            <div class="banner-box">
+                <h2 class="banner-title">Current Month</h2>
                 <div id="currentMonthData" class="summary-container"></div>
             </div>
     

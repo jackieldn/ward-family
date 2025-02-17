@@ -55,7 +55,7 @@ h3 {
     color: #333;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 830px) {
     .summary-box {
         width: 100%; /* Expands fully on smaller screens */
         min-width: unset;
@@ -100,5 +100,23 @@ h3 {
 @media (max-width: 500px) {
     .summary-box-report {
         min-width: 100%; /* Ensures it takes full width on small screens */
+    }
+}
+
+/* 🛑 Stop Hiding Sidebar on Desktop */
+@media (min-width: 769px) {
+    .sidebar {
+        display: flex !important;
+    }
+
+    .mobile-navbar {
+        display: none !important; /* Hide mobile navbar */
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0 !important;
+        padding: 15px !important;
     }
 }
