@@ -11,13 +11,20 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='images/android-chrome-192x192.png') }}">
     <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='images/android-chrome-512x512.png') }}">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="{{ url_for('static', filename='tfl-updates.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Ovo&family=Radley&display=swap" rel="stylesheet">
 
     <style>
+
+        .page-logo {
+            width: 75px;
+            height: 75px;
+            border-radius: 25px;
+            background-color: white;
+            margin-top: 20px;
+        }
                 body {
             display: flex;
             flex-direction: column; /* Ensure elements are stacked vertically */
@@ -25,7 +32,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(-45deg, #ffda76, #fff4d4, #ffda75, #fff9dd);
+            background: linear-gradient(-45deg, #ffda76, #fff4d4, #ffb940, #fff9dd);
             background-size: 400% 400%;
             animation: backgroundAnimation 10s ease infinite;
             font-family: Arial, sans-serif;
@@ -38,37 +45,67 @@
             100% { background-position: 0% 50%; }
         }
 
-        .typewriter-container {
-            text-align: center;
-            min-height: 30px;
-        }
+        @media (max-width: 768px) {
+
+            .typewriter-container {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        max-width: 100%;
+    }
+
+    .typewriter {
+        font-size: 14px !important; /* Smaller font for mobile */
+        line-height: 1.5; /* Improve readability on mobile */
+    }
+    body {
+        justify-content: flex-start !important; /* Align from top */
+        padding-top: 30px; /* Add spacing from top */
+    }
+
+    .login-container {
+        margin-top: 5px; /* Adjust spacing */
+        padding: 15px; /* Add padding for smaller screens */
+    }
+}
+
+            .title-container {
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .typewriter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 10px;
+            overflow: hidden; /* Prevents cursor from escaping */
+            max-width: 100%; /* Limits width */
+            width: fit-content; /* Shrinks to fit text */
+}
 
         h1 {
             text-align: center;
             font-size: 40px;
             font-weight: 400;
             font-family: 'Radley', serif;
-            margin-bottom: 10px;
+            margin-bottom: -17px;
             font-style: normal;
             letter-spacing: -2px;
         }
 
         .typewriter {
-        font-family: "Outfit", serif;
-        font-optical-sizing: auto;
-        font-weight: 300;
-        min-height: 24px;
-        font-style: normal;
-        white-space: nowrap;
-        overflow: hidden;
-        border-right: 2px solid black;
-        width: 0;
-        animation: typing 2s steps(30, end) forwards, blink-caret 0.75s step-end infinite;
-        min-height: 24px;
-        min-width: 250px; /* Prevents collapsing when text disappears */
-        display: inline-block; /* Keeps space reserved */
-        animation: blink-caret 0.75s step-end infinite;
-    }
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+    letter-spacing: -0.5px;
+    text-align: center;
+    white-space: pre-wrap; /* Wrap text and keep line breaks */
+    word-break: break-word; /* Prevent overflow */
+    overflow-wrap: break-word;
+    display: inline-block;
+    height: auto; /* Adjust for multiple lines */
+    line-height: 1.5;
+    padding-top: 0px;
+}
 
         @keyframes typing {
             from { width: 0; }
@@ -76,21 +113,23 @@
         }
 
         @keyframes blink-caret {
-            50% { border-color: transparent; }
+            from, to { border-color: transparent; }
+            50% { border-color: black; }
         }
 
         .login-container {
-            background: white;
-            padding: 20px;
-            border-radius: 45px;
-            box-shadow: 0px 3px 3px rgba(232, 173, 33, 0.579);
-            text-align: center;
-            width: 300px;
-            margin-top: 20px;
-            transform: translateY(50px);
-            opacity: 0;
-            animation: fadeInSlide 0.8s ease-out forwards;
-        }
+    background: white;
+    padding: 20px;
+    border-radius: 45px;
+    box-shadow: 0px 3px 3px rgba(232, 173, 33, 0.579);
+    text-align: center;
+    width: 300px;
+    margin-top: 20px;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: all 0.4s ease-in-out; /* Smooth transition for height */
+    animation: fadeInSlide 0.8s ease-out forwards;
+}
 
         @keyframes fadeInSlide {
             from {
@@ -104,16 +143,18 @@
         }
 
         .login-container {
-            background: white;
-            padding: 20px;
-            border-radius: 45px;
-            box-shadow: 0px 3px 3px rgba(232, 173, 33, 0.579);
-            text-align: center;
-            width: 300px;
-            transform: translateY(50px);
-            opacity: 0;
-            animation: fadeInSlide 0.8s ease-out forwards;
-        }
+    background: white;
+    padding: 20px;
+    border-radius: 45px;
+    box-shadow: 0px 3px 3px rgba(232, 173, 33, 0.579);
+    text-align: center;
+    width: 300px;
+    margin-top: 20px;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: margin-top 0.3s ease-in-out, height 0.3s ease-in-out;
+    animation: fadeInSlide 0.8s ease-out forwards;
+}
 
         @keyframes fadeInSlide {
             from {
@@ -169,12 +210,18 @@
     </style>
 </head>
 <body>
-    <div class="typewriter-container">
-        <h1>Ey up, Wards!</h1>
-        <p id="animated-text" class="typewriter">&nbsp;</p>
-    </div>
+            <!-- Title Section -->
+            <div class="title-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="page-logo">
+                <h1>Ey up, Wards!</h1>
+            </div>
+
+            <!-- Typewriter Section -->
+            <div class="typewriter-container">
+                <p id="animated-text" class="typewriter">&nbsp;</p>
+            </div>
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Log in</h2>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -190,56 +237,59 @@
     </div>
 
     <script>
-const sentences = [
-    "Let's check on that Severe Delay!",
-    "Feeling the budget pain?",
-    "The perfect time to check on Pumpkin's meds."
-];
-
-let sentenceIndex = 0;
-const textElement = document.getElementById("animated-text");
-
+        const sentences = [
+            "When you flick the switch, the light comes on",
+            "Let's check on that Severe Delay!",
+            "Feeling the budget pain?",
+            "Time to check Pumpkin's meds?"
+        ];
+        
+        let sentenceIndex = 0;
+        const textElement = document.getElementById("animated-text");
+        
 function typeSentence(sentence, callback) {
     let i = 0;
-    textElement.innerHTML = "";
-    textElement.style.width = "auto"; // Prevents the text container from collapsing
+    textElement.style.whiteSpace = "pre-wrap"; // Multi-line support
+    textElement.innerHTML = "&nbsp;"; // Placeholder
     function type() {
         if (i < sentence.length) {
-            textElement.innerHTML += sentence.charAt(i);
+            textElement.innerHTML = sentence.substring(0, i + 1) + "\u200B"; // Zero-width space
             i++;
-            setTimeout(type, 100);
+            setTimeout(type, 50);
         } else {
-            setTimeout(() => deleteSentence(callback), 2000);
+            setTimeout(() => deleteSentence(callback), 1500);
         }
     }
     type();
 }
 
-function deleteSentence(callback) {
+        
+        function deleteSentence(callback) {
     let currentText = textElement.innerHTML;
+
     function erase() {
         if (currentText.length > 0) {
             currentText = currentText.slice(0, -1);
-            textElement.innerHTML = currentText;
-            setTimeout(erase, 50);
+            textElement.innerHTML = currentText + "&nbsp;"; // Keeps width during deletion
+            setTimeout(erase, 25);
         } else {
-            textElement.innerHTML = "&nbsp;"; // Keeps a space to avoid shrinking
-            setTimeout(callback, 500); // Small delay before typing next sentence
+            textElement.innerHTML = "&nbsp;"; // Keeps placeholder
+            setTimeout(callback, 300);
         }
     }
     erase();
 }
-
-function cycleSentences() {
-    typeSentence(sentences[sentenceIndex], () => {
-        sentenceIndex = (sentenceIndex + 1) % sentences.length;
+        
+        function cycleSentences() {
+            typeSentence(sentences[sentenceIndex], () => {
+                sentenceIndex = (sentenceIndex + 1) % sentences.length;
+                cycleSentences();
+            });
+        }
+        
+        // Start the cycle
         cycleSentences();
-    });
-}
-
-// Start the cycle
-cycleSentences();
-
-    </script>
+        </script>
+        
 </body>
 </html>
