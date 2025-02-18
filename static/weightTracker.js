@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     const weightInput = document.getElementById("weight-input");
     const weightDate = document.getElementById("weight-date");
+    if (weightDate && !weightDate.value) {
+        const today = new Date().toISOString().split('T')[0];
+        weightDate.value = today; }
     const saveWeightButton = document.getElementById("save-weight");
     const weightDisplay = document.getElementById("weight-display");
     const toggleHistory = document.getElementById("toggle-weight-history");
     const weightHistoryList = document.getElementById("weight-history");
-
+    
     let selectedCat = "Grey"; // Default cat
 
     // Listen for cat selection changes

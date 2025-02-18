@@ -52,15 +52,38 @@ def add_medication():
 
     return jsonify({"message": "Medication saved successfully!"})
 
+@catify_bp.route("/api/get_medications/<cat_name>", methods=["GET"])
+def get_medications_alias(cat_name):
+    return get_medications(cat_name)
+
 @catify_bp.route("/get-medications/<cat_name>", methods=["GET"])
 def get_medications(cat_name):
     conn = connect_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, dosage, frequency, daily_count FROM medications WHERE cat_name = ?", (cat_name,))
+
+    # 🟡 Include start_date in SELECT statement
+    cursor.execute("""
+        SELECT id, name, dosage, frequency, daily_count, start_date
+        FROM medications
+        WHERE cat_name = ?
+    """, (cat_name,))
+
     meds = cursor.fetchall()
     conn.close()
 
-    return jsonify([{"id": row[0], "name": row[1], "dosage": row[2], "frequency": row[3], "daily_count": row[4]} for row in meds])
+    # 🟢 Add start_date to response
+    return jsonify([
+        {
+            "id": row[0],
+            "name": row[1],
+            "dosage": row[2],
+            "frequency": row[3],
+            "daily_count": row[4],
+            "start_date": row[5] if row[5] else None
+        }
+        for row in meds
+    ])
+
 
 ### **APPOINTMENT API** ###
 @catify_bp.route("/add-appointment", methods=["POST"])

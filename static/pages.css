@@ -141,6 +141,16 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* 🟠 Default Centering for summary-box-report */
+.summary-box-report {
+    margin: 0 auto;
+    padding: 30px;
+    width: 100%;
+    max-width: 700px; /* Keeps consistent width */
+    text-align: center;
+    box-sizing: border-box;
+}
+
 /* Category Header */
 .category-header {
     font-size: 1.2em;
@@ -368,3 +378,4 @@ h1 {
     padding: 20px;
     transition: margin-left 0.3s;
 }
+

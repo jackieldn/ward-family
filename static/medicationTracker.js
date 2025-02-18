@@ -3,7 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const medDosage = document.getElementById("med-dosage");
     const medFrequency = document.getElementById("med-frequency");
     const medDailyCount = document.getElementById("med-daily-count");
-    const medStartDate = document.getElementById("med-start-date"); 
+    const medStartDate = document.getElementById("med-start-date");
+    if (medStartDate && !medStartDate.value) {
+        const today = new Date().toISOString().split('T')[0];
+        medStartDate.value = today;
+    } 
     const addMedButton = document.getElementById("add-med");
     const medList = document.getElementById("medication-list");
 
@@ -71,11 +75,17 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateMedicationList(meds) {
         medList.innerHTML = meds.length ? "" : "<li>No medications added</li>";
         meds.forEach(med => {
+            const startDate = med.start_date ? med.start_date : "No date provided";
             const li = document.createElement("li");
-            li.innerHTML = `${med.name} - ${med.dosage} (${med.frequency}, ${med.daily_count}x) - Starts on ${med.start_date}`;
+            li.innerHTML = `
+                ${med.name} - ${med.dosage} (${med.frequency}, ${med.daily_count}x) - Starts on ${startDate}
+            `;
             medList.appendChild(li);
         });
     }
 
     fetchMedications(); // Load medications on page load
 });
+
+// 🟡 Make updateMedicationList globally accessible
+window.updateMedicationList = updateMedicationList;

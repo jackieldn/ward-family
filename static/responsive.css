@@ -120,3 +120,66 @@ h3 {
         padding: 15px !important;
     }
 }
+
+/* 🟡 Mobile: Stack Weight Input Fields Vertically */
+@media (max-width: 600px) {
+    .weight-input-container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .weight-input-container input, 
+    .weight-input-container button {
+        width: 100%;
+        max-width: 280px; /* Keeps consistent size */
+    }
+}
+
+/* 🟡 Mobile: Stack Medication Form Fields */
+@media (max-width: 600px) {
+    .medication-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .medication-form input, 
+    .medication-form select, 
+    .medication-form button {
+        width: 100%;
+        max-width: 280px; /* Keeps consistent width */
+    }
+
+    #med-daily-count {
+        width: 100%;
+    }
+}
+
+/* 🟡 Mobile: Stack Month, Year, and Button Vertically */
+@media (max-width: 600px) {
+    .date-selection {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .date-group, 
+    #fetch-report {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+    }
+}
+
+/* 🟡 Mobile: Center Align and Add Padding to summary-box-report */
+@media (max-width: 768px) {
+    .summary-box-report {
+        margin: 0 auto;
+        padding: 20px;
+        width: 90%;
+        max-width: 500px; /* Restrict maximum width */
+        box-sizing: border-box; /* Ensure padding doesn't overflow */
+    }
+}

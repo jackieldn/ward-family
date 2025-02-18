@@ -2,6 +2,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const appointmentTitle = document.getElementById("appointment-title");
     const appointmentDate = document.getElementById("appointment-date");
     const appointmentTime = document.getElementById("appointment-time");
+
+    if (appointmentDate && !appointmentDate.value) {
+        const today = new Date().toISOString().split('T')[0];
+        appointmentDate.value = today;
+    }
+
+    if (appointmentTime && !appointmentTime.value) {
+        appointmentTime.value = "12:00";
+    }
     const appointmentNotes = document.getElementById("appointment-notes");
     const addAppointmentButton = document.getElementById("add-appointment");
     const appointmentsList = document.getElementById("appointments-list");

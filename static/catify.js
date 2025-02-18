@@ -26,3 +26,12 @@ document.addEventListener("DOMContentLoaded", function () {
     greyImage.addEventListener("click", () => updateSelection("Grey"));
     pumpkinImage.addEventListener("click", () => updateSelection("Pumpkin"));
 });
+
+// 🟡 Correct API Call for Medications
+fetch(`/catify/get-medications/Pumpkin`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Medications API Response:", data);
+        updateMedicationList(data);
+    })
+    .catch(error => console.error("Error fetching medications:", error));
