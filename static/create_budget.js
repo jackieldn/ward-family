@@ -3,49 +3,60 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetchCategories();  // This will now call loadTitles() after categories are fetched
 
+    const saveButton = document.getElementById('save-expenses');
+    if (saveButton) {
+        saveButton.addEventListener("click", saveExpenses);
+    } else {
+        console.error("Save button not found!");
+    }
     document.querySelector(".save")?.addEventListener("click", saveExpenses);
 });
 
-// ✅ Fetch categories from the backend
+// ✅ Fetch and Display Categories
 function fetchCategories() {
     fetch("/get-categories")
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById("categories-container");
-            container.innerHTML = "";
+            container.innerHTML = ""; // Clear previous categories
 
             data.categories.forEach(category => {
                 const categoryDiv = document.createElement("div");
-                categoryDiv.classList.add("category");
-                categoryDiv.id = category;
+                categoryDiv.classList.add("budget-widget");
+                categoryDiv.id = `category-${category}`;
 
                 categoryDiv.innerHTML = `
-                    <h2>${category}</h2>
-                    <div class="expense-item">
-                        <select class="title-select" onchange="handleTitleSelection(this)">
+                    <div class="widget-banner-header">${category}</div>
+                    <div class="widget-content">
+                        <select class="title-select">
                             <option value="">Select an expense</option>
-                            <option value="other">Other</option>
                         </select>
-                        <input type="text" class="custom-title-input" placeholder="Enter new expense" style="display: none;">
+                        <input type="text" class="custom-title-input" placeholder="Enter custom title" style="display:none;">
                         <input type="number" class="amount-input" placeholder="£">
+                        <button onclick="addExpense('${category}')">Add</button>
+                        <ul class="expense-list"></ul>
                     </div>
-                    <button onclick="addExpense('${category}')">Add</button>`;
+                `;
 
                 container.appendChild(categoryDiv);
             });
 
-            loadTitles(); // ✅ Call loadTitles() instead of fetchTitles()
+            // ✅ Load Titles After Categories Are Loaded
+            loadTitles();
         })
         .catch(error => console.error("Error loading categories:", error));
 }
 
-// ✅ Fetch saved expense titles from the backend
+
+// ✅ Fetch and Display Titles
 function loadTitles() {
     fetch("/get-titles")
         .then(response => response.json())
         .then(data => {
+            const titles = data.titles;
+
             document.querySelectorAll(".title-select").forEach(select => {
-                data.titles.forEach(title => {
+                titles.forEach(title => {
                     const option = document.createElement("option");
                     option.value = title;
                     option.textContent = title;
@@ -55,6 +66,7 @@ function loadTitles() {
         })
         .catch(error => console.error("Error loading titles:", error));
 }
+
 
 // ✅ Handle title selection
 function handleTitleSelection(selectElement) {
@@ -106,17 +118,21 @@ function addExpense(categoryId) {
 function saveExpenses() {
     const month = document.getElementById("month").value;
     const year = document.getElementById("year").value;
-    const date = `${year}-${month}-01`; // Use first day of selected month
+    const date = `${year}-${month}-01`;
 
     const expenses = [];
 
-    document.querySelectorAll(".category").forEach(categoryDiv => {
-        const category = categoryDiv.id;
+    document.querySelectorAll(".budget-widget").forEach(categoryDiv => {
+        const category = categoryDiv.id.replace("category-", "");
         categoryDiv.querySelectorAll(".expense-item").forEach(item => {
             const text = item.querySelector("span")?.innerText;
             if (text) {
                 const [title, amount] = text.split(": £");
-                expenses.push({ title: title.trim(), category, amount: parseFloat(amount) });
+                expenses.push({
+                    category: category,
+                    title: title.trim(),
+                    amount: parseFloat(amount)
+                });
             }
         });
     });
@@ -129,7 +145,7 @@ function saveExpenses() {
     fetch("/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date, expenses })  // ✅ Now using user-selected date
+        body: JSON.stringify({ date, expenses })
     })
     .then(response => response.json())
     .then(data => {
@@ -138,4 +154,3 @@ function saveExpenses() {
     })
     .catch(error => console.error("Error saving expenses:", error));
 }
-

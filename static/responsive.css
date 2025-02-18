@@ -183,3 +183,24 @@ h3 {
         box-sizing: border-box; /* Ensure padding doesn't overflow */
     }
 }
+
+@media (max-width: 600px) {
+    .budget-widget {
+        width: 100%;
+        min-width: 350px; /* Set a reasonable minimum width */
+        max-width: 400px; /* Prevents it from stretching too far */
+        margin: 10px auto;
+        box-sizing: border-box;
+    }
+
+    .expense-input {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .amount-input,
+    .add-expense {
+        width: 100%;
+    }
+}
+

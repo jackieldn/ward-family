@@ -172,12 +172,24 @@ def get_weights(cat_name):
 @app.route('/get-categories')
 @login_required
 def get_categories():
-    return jsonify({"categories": ["Housing", "Shopping", "Utilities", "Pet", "Miscellaneous", "Savings", "Debt"]})
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM categories ORDER BY id")
+    categories = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return jsonify({"categories": categories})
+
 
 @app.route('/get-titles')
 @login_required
 def get_titles():
-    return jsonify({"titles": ["Rent", "Council Tax", "Groceries", "Household", "Cat Food", "Gas", "Electricity", "Gas", "Water", "BT", "Internet", "TV Licensing", "Cat Insurance", "Cat Health Pack", "Cat Medication", "Netflix", "Credit Ladder", "Camera", "Phone Insurance", "Apple One", "Duolingo", "Joint Savings", "Richard Savings", "Jack Savings", "Gift Pot", "Additional Savings"]})
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT title FROM titles ORDER BY title")
+    titles = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return jsonify({"titles": titles})
+
 
 @app.route('/add', methods=["POST"])
 @login_required
