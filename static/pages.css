@@ -76,7 +76,7 @@ h1 {
 
 /* Generate Report Button */
 #fetch-report {
-    background: #f6d365;
+    background: #f1be50;
     border: none;
     cursor: pointer;
     border-radius: 8px;
@@ -87,7 +87,7 @@ h1 {
 }
 
 #fetch-report:hover {
-    background: #e5a51a;
+    background: #d99400;
 }
 
 /* Budget Category Boxes */
@@ -218,7 +218,7 @@ h1 {
 }
 
 .summary-box-report {
-    background: #f6d365;
+    background: #f1be50;
     padding: 30px;
     border-radius: 25px;
     max-width: 800px; /* Ensures alignment with report-container */

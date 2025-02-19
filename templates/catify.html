@@ -90,14 +90,17 @@
     <!-- Health Tracker Sections -->
     <div class="content-box">
         <h2>Weight Tracking</h2>
-        <p>Last recorded weight: <span id="weight-display">---</span> kg</p>
+        <p>Last recorded weight: <span id="weight-display">---</span> </p>
     
         <!-- Weight Input with Date Selector -->
         <div class="weight-input-container">
             <input type="number" id="weight-input" placeholder="Enter weight">
             <input type="date" id="weight-date">
-            <button id="save-weight" class="save">Save</button>
         </div>
+        
+        <div class="save-button-container">
+            <button id="save-weight" class="save">Save</button>
+        </div>        
     
         <!-- Expandable List of Last 10 Weights -->
         <p><a href="#" id="toggle-weight-history">Show Last 10 Measurements ▼</a></p>
@@ -156,6 +159,6 @@
             <li>No reminders</li>
         </ul>
     </div>
-    
+    {% include 'footer.html' %}
 </body>
 </html>

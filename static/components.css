@@ -99,7 +99,7 @@
 
 /* 🔘 Buttons */
 button {
-    background: #f7c9e4;
+    background: #ff96d4;
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -109,9 +109,9 @@ button {
     transition: background 0.2s ease-in-out;
 }
 
-/*button:hover {
+button:hover {
     background: #ec30a1;
-}*/
+}
 
 button-cry {
     background: #f6d365;
@@ -452,4 +452,19 @@ button-x {
 
 .add-expense:hover {
     background-color: #ec92c2;
+}
+
+/* 📌 Footer Styling */
+.site-footer {
+    text-align: center;
+    color: rgb(224, 152, 0);
+    padding: 10px;
+    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    margin-top: 30px;
+    text-shadow: 1px 1px 1px rgb(255, 255, 255, 0.5);
+}
+
+.site-footer p {
+    margin: 0;
 }

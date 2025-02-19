@@ -13,6 +13,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='images/android-chrome-512x512.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
     <script src="{{ url_for('static', filename='tfl-updates.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Ovo&family=Radley&display=swap" rel="stylesheet">
 
@@ -235,6 +236,7 @@
             <button class="login-btn" type="submit">Login</button>
         </form>
     </div>
+    {% include 'footer.html' %}
 
     <script>
         const sentences = [

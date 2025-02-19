@@ -18,7 +18,7 @@
 
 /* Active Cat - Changes Border Color */
 .cat-image.active {
-    border-color: #e5a51a;
+    border-color: #d99400;
 }
 
 
@@ -48,7 +48,7 @@
 .cat-content-box h4 {
     text-align: left;
     font-size: 20px;
-    color: #e5a51a;
+    color: #d99400;
     }
 
 .cat-content-box p {
@@ -63,7 +63,7 @@
     }
 
 .save {
-    background: #e9c26d;
+    background: #f1be50;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
@@ -75,7 +75,11 @@
 }
 
 .save:hover {
-    background: #e5a51a;
+    background: #d99400;
+}
+
+.save-button-container {
+    text-align: center;
 }
 
 /* Align weight input and date selector */
@@ -83,7 +87,6 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 15px;
 }
 
 .weight-input-container input {
@@ -92,6 +95,7 @@
     border-radius: 6px;
     font-size: 16px;
     width: 120px;
+    height: 25px;
     text-align: center;
 }
 
@@ -219,6 +223,7 @@
     border-radius: 6px;
     font-size: 16px;
     width: 150px;
+    height: 25px;
     text-align: center;
 }
 
