@@ -2,12 +2,11 @@ from flask import Blueprint, request, jsonify, session, render_template
 from datetime import datetime
 from functools import wraps
 
-from app import db  
-
 catify_bp = Blueprint("catify_bp", __name__)
 
 def get_db():
-    return db  
+    from app import db  # ✅ Lazy import to prevent circular dependency
+    return db
 
 # Require Login Middleware
 def require_login(f):
@@ -96,9 +95,16 @@ def get_medications(cat_id):
         meds_ref = get_db().collection("users").document("catify").collection("cats").document(cat_id).collection("medications").stream()
         medications = [{"id": doc.id, **doc.to_dict()} for doc in meds_ref]
 
+        print(f"📌 Medications for {cat_id}: {medications}")  # ✅ Debugging print
+
+        if not medications:
+            return jsonify({"message": "No medications found"}), 200
+
         return jsonify(medications), 200
     except Exception as e:
+        print(f"❌ Error fetching medications: {str(e)}")  # ✅ Debugging print
         return jsonify({"error": str(e)}), 500
+
     
 @catify_bp.route("/add-medication", methods=["POST"])
 @require_login
@@ -147,9 +153,16 @@ def get_reminders(cat_id):
         reminders_ref = get_db().collection("users").document("catify").collection("cats").document(cat_id).collection("reminders").stream()
         reminders = [{"id": doc.id, **doc.to_dict()} for doc in reminders_ref]
 
+        print(f"📌 Reminders for {cat_id}: {reminders}")  # ✅ Debugging print
+
+        if not reminders:
+            return jsonify({"message": "No reminders found"}), 200
+
         return jsonify(reminders), 200
     except Exception as e:
+        print(f"❌ Error fetching reminders: {str(e)}")  # ✅ Debugging print
         return jsonify({"error": str(e)}), 500
+
 
 @catify_bp.route("/add-reminder", methods=["POST"])
 @require_login

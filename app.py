@@ -35,10 +35,8 @@ if not firebase_admin._apps:
     admin_cred = admin_credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
     firebase_admin.initialize_app(admin_cred)
 
-# Import Blueprints AFTER initializing the database
-if "catify_bp" not in globals():
-    from catify import catify_bp
-    app.register_blueprint(catify_bp, url_prefix="/catify")
+from catify import catify_bp  # ✅ Import after Firestore initialization
+app.register_blueprint(catify_bp, url_prefix="/catify")  # ✅ Register blueprint once
 
 @app.route('/login', methods=['GET'])
 def login():
