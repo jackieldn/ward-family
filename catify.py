@@ -60,7 +60,7 @@ def get_weights(cat_id):
         if not user_id:
             return jsonify({"error": "Unauthorized"}), 401
 
-        weight_ref = db.collection("users").document("catify").collection("cats").document(cat_id).collection("weight").stream()
+        weight_ref = get_db().collection("users").document("catify").collection("cats").document(cat_id).collection("weight").stream()
         weight_data = [{"id": doc.id, **doc.to_dict()} for doc in weight_ref]
 
         return jsonify(weight_data)
