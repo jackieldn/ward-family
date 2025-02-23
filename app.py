@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from google.oauth2 import service_account
 from google.cloud import firestore
 from datetime import datetime
 from functools import wraps
@@ -16,6 +17,17 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Initialize Firestore
 db = firestore.Client()
+
+# Path to your service account file
+SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"
+
+# Create credentials object from your service account
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE
+)
+
+# Pass credentials when creating the Firestore client
+db = firestore.Client(credentials=credentials)
 
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
