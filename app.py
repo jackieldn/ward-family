@@ -57,26 +57,26 @@ def index():
 def firebase_login():
     try:
         data = request.get_json()
+        print("📌 Received login request:", data)  # ✅ Log received data
+
         if not data or "idToken" not in data:
             return jsonify({"success": False, "message": "Missing ID token"}), 400
 
         id_token = data["idToken"]
+        print("🔑 Verifying Firebase token...")
+
         decoded_token = firebase_auth.verify_id_token(id_token)
         user_id = decoded_token["uid"]
 
-        # Store user session
+        print(f"✅ Login successful for user: {user_id}")
         session["user_id"] = user_id
+
         return jsonify({"success": True, "message": "Login successful!"}), 200
 
     except Exception as e:
+        print(f"❌ Firebase Auth Error: {str(e)}")  # ✅ Print exact error
         return jsonify({"success": False, "message": str(e)}), 400
-    
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        session["user_id"] = request.form.get("user_id")  # Dummy login
-        return redirect(url_for("index"))
-    return render_template("login.html")
+
 
 @app.route('/tfl-updates')
 @login_required
