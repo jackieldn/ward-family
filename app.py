@@ -39,12 +39,16 @@ if not firebase_admin._apps:
 from catify import catify_bp
 app.register_blueprint(catify_bp, url_prefix="/catify")
 
+@app.route('/login', methods=['GET'])
+def login():
+    return render_template("login.html")
+
 # Require Login Decorator
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "user_id" not in session:
-            return redirect(url_for("login"))  # Redirect to login page
+            return redirect(url_for("login"))  # ✅ Now works because `/login` exists
         return f(*args, **kwargs)
     return decorated_function
 
