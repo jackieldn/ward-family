@@ -311,7 +311,7 @@ h1 {
 /* Left-aligned title with fixed width */
 .budget-item span:first-child {
     text-align: left;
-    width: 180px; /* Ensures all titles take up the same space */
+    width: 140px; /* Ensures all titles take up the same space */
     flex-shrink: 0; /* Prevents shrinking */
 }
 

@@ -176,7 +176,7 @@ h3 {
 /* 🟡 Mobile: Center Align and Add Padding to summary-box-report */
 @media (max-width: 768px) {
     .summary-box-report {
-        margin: 0 auto;
+        /*margin: 0 auto;*/
         padding: 20px;
         width: 90%;
         max-width: 500px; /* Restrict maximum width */

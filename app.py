@@ -1,106 +1,128 @@
-from flask import Flask, render_template, request, redirect, url_for, session, request, jsonify
-import os
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from google.cloud import firestore
+from datetime import datetime
+from functools import wraps
+import firebase_admin
+from firebase_admin import credentials, auth as firebase_auth
 import requests
 import re
-from functools import wraps
-from auth import auth
-from config import SQLALCHEMY_DATABASE_URI
-from config import SECRET_KEY, TFL_API_BASE_URL, TFL_TUBE_STATUS_ENDPOINT
-from email_sender import send_budget_report
-from report_utils import report_data
-from catify import catify_bp
-from savings import savings_bp, init_savings_db
-from flask_sqlalchemy import SQLAlchemy
-from create_db import ensure_db
-from werkzeug.middleware.proxy_fix import ProxyFix
-from datetime import datetime
+import os
 
+# Initialize Flask App
 app = Flask(__name__)
-app.secret_key = SECRET_KEY
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.secret_key = "your_secret_key"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Ensure database exists before running
-ensure_db()
-db = SQLAlchemy(app)
+# Initialize Firestore
+db = firestore.Client()
 
-# Register blueprints
-app.register_blueprint(auth)
-app.register_blueprint(savings_bp)
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
+firebase_admin.initialize_app(cred)
+
+# Import Blueprints AFTER initializing the database
+from catify import catify_bp
+
+# Register Blueprints
 app.register_blueprint(catify_bp, url_prefix="/catify")
 
-# Global login protection for the entire app
-@app.before_request
-def require_login():
-    open_routes = ['auth.login', 'auth.register', 'static']
-    if 'user_id' not in session and request.endpoint not in open_routes:
-        return redirect(url_for('auth.login'))
-
+# Require Login Decorator
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('login'))  # Redirect to login if not logged in
+        if "user_id" not in session:
+            return redirect(url_for("login"))  # Redirect to login page
         return f(*args, **kwargs)
     return decorated_function
 
-# Utility function for database connection
-def connect_db():
-    return sqlite3.connect("database.db")
-
-# Routes
 @app.route('/')
 @login_required
 def index():
-    if 'user_id' not in session:
-        return redirect(url_for('auth.login'))
     return render_template('index.html')
+
+@app.route('/firebase-login', methods=['POST'])
+def firebase_login():
+    try:
+        data = request.get_json()
+        if not data or "idToken" not in data:
+            return jsonify({"success": False, "message": "Missing ID token"}), 400
+
+        id_token = data["idToken"]
+        decoded_token = firebase_auth.verify_id_token(id_token)
+        user_id = decoded_token["uid"]
+
+        # Store user session
+        session["user_id"] = user_id
+        return jsonify({"success": True, "message": "Login successful!"}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+    
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session["user_id"] = request.form.get("user_id")  # Dummy login
+        return redirect(url_for("index"))
+    return render_template("login.html")
 
 @app.route('/tfl-updates')
 @login_required
 def tfl_updates():
     return render_template('tfl-updates.html')
 
+@app.route('/balances')
+@login_required
+def balances():
+    return render_template('balances.html')
+
 @app.route('/create')
 @login_required
 def create_budget():
     return render_template('create.html')
 
+TFL_API_BASE_URL = "https://api.tfl.gov.uk"
+TFL_TUBE_STATUS_ENDPOINT = "/Line/Mode/tube/Status"
+
 @app.route('/get-tfl-status')
 @login_required
 def get_tfl_status():
-    response = requests.get(f"{TFL_API_BASE_URL}{TFL_TUBE_STATUS_ENDPOINT}")
-    if response.status_code == 200:
-        return jsonify(response.json())
-    return jsonify({"error": "Failed to fetch data from TfL API"}), response.status_codes
+    try:
+        response = requests.get(f"{TFL_API_BASE_URL}{TFL_TUBE_STATUS_ENDPOINT}")
+        if response.status_code == 200:
+            return jsonify(response.json())
+        else:
+            return jsonify({"error": "Failed to fetch data from TfL API"}), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/get-station-arrivals')
 @login_required
 def get_station_arrivals():
     station_id = request.args.get('stationId')
     api_url = f"{TFL_API_BASE_URL}/StopPoint/{station_id}/Arrivals"
-    response = requests.get(api_url)
-    arrivals = response.json() if response.ok else []
 
-    def clean_direction(platform_name):
-        # Extract direction like 'westbound' or 'northbound' using regex
-        match = re.search(r'(westbound|eastbound|northbound|southbound)', platform_name.lower())
-        return match.group(0) if match else 'unknown'
+    try:
+        response = requests.get(api_url)
+        arrivals = response.json() if response.ok else []
 
-    filtered = [
-        {
-            "line": a.get('lineName', 'Unknown'),
-            "destination": a.get('destinationName', 'Unknown'),
-            "direction": clean_direction(a.get('platformName', 'unknown')),
-            "eta": round(a.get('timeToStation', 0) / 60)
-        }
-        for a in arrivals
-    ]
+        def clean_direction(platform_name):
+            match = re.search(r'(westbound|eastbound|northbound|southbound)', platform_name.lower())
+            return match.group(0) if match else 'unknown'
 
-    print("Filtered Station Arrivals Data:", filtered)  # For debugging
-    return jsonify(filtered)
+        filtered = [
+            {
+                "line": a.get('lineName', 'Unknown'),
+                "destination": a.get('destinationName', 'Unknown'),
+                "direction": clean_direction(a.get('platformName', 'unknown')),
+                "eta": round(a.get('timeToStation', 0) / 60)
+            }
+            for a in arrivals
+        ]
+
+        return jsonify(filtered)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/report')
 @login_required
@@ -112,102 +134,108 @@ def report_page():
 def house_equity_page():
     return render_template('house_equity.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()  # ✅ Clears all session data (logs the user out)
+    return redirect(url_for("login"))  # ✅ Redirects to the login page
+
 @app.route('/get-monthly-total-data', methods=['GET'])
 @login_required
 def get_monthly_total_data():
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
+    user_id = session["jackward"]
+    expenses_ref = db.collection("users").document(user_id).collection("expenses")
     
-    cursor.execute("SELECT strftime('%Y-%m', date) AS month, SUM(amount) FROM expenses GROUP BY month")
-    data = cursor.fetchall()
-    conn.close()
-
-    response = {
-        "months": [row[0] for row in data],
-        "totals": [row[1] for row in data]
-    }
+    expenses = expenses_ref.stream()
     
-    return jsonify(response)
+    monthly_totals = {}
+    for doc in expenses:
+        data = doc.to_dict()
+        month = data["date"].strftime("%Y-%m")  # Convert timestamp to string format
+        
+        if month not in monthly_totals:
+            monthly_totals[month] = 0
+        monthly_totals[month] += data["amount"]
+    
+    return jsonify({
+        "months": list(monthly_totals.keys()),
+        "totals": list(monthly_totals.values())
+    })
 
 @app.route('/get-current-month-data', methods=['GET'])
 @login_required
 def get_current_month_data():
+    user_id = session["jackward"]
     current_month = datetime.now().strftime("%Y-%m")
-    
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-    
-    cursor.execute("SELECT category, SUM(amount) FROM expenses WHERE strftime('%Y-%m', date) = ? GROUP BY category", (current_month,))
-    data = cursor.fetchall()
-    conn.close()
-    
-    response = [{"category": row[0], "total": row[1]} for row in data]
 
-    return jsonify(response)
+    expenses_ref = db.collection("users").document(user_id).collection("expenses")
+    expenses = expenses_ref.stream()
 
-# APIs
-@app.route("/add-weight", methods=["POST"])
-@login_required
-def add_weight():
-    data = request.get_json()
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO weight_logs (cat_name, date, weight) VALUES (?, ?, ?)",
-                   (data["cat_name"], data["date"], data["weight"]))
-    conn.commit()
-    conn.close()
-    return jsonify({"message": "Weight saved successfully!"})
+    category_totals = {}
+    for doc in expenses:
+        data = doc.to_dict()
+        expense_month = data["date"].strftime("%Y-%m")
+        
+        if expense_month == current_month:
+            category = data["category"]
+            if category not in category_totals:
+                category_totals[category] = 0
+            category_totals[category] += data["amount"]
 
-@app.route("/get-weights/<cat_name>", methods=["GET"])
-@login_required
-def get_weights(cat_name):
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT date, weight FROM weight_logs WHERE cat_name = ? ORDER BY date DESC LIMIT 10", (cat_name,))
-    weights = cursor.fetchall()
-    conn.close()
-    return jsonify([{"date": row[0], "weight": row[1]} for row in weights])
+    return jsonify([
+        {"category": category, "total": total}
+        for category, total in category_totals.items()
+    ])
+
 
 # Budget data save
 @app.route('/get-categories')
 @login_required
 def get_categories():
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT name FROM categories ORDER BY id")
-    categories = [row[0] for row in cursor.fetchall()]
-    conn.close()
+    categories_ref = db.collection("categories")
+    docs = categories_ref.stream()
+
+    categories = []
+    for doc in docs:
+        data = doc.to_dict()
+        if "name" in data:
+            categories.append(data["name"])
+
+    if not categories:
+        return jsonify({"categories": []}), 200  # Return empty list if no categories found
+
     return jsonify({"categories": categories})
 
 
 @app.route('/get-titles')
 @login_required
 def get_titles():
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT title FROM titles ORDER BY title")
-    titles = [row[0] for row in cursor.fetchall()]
-    conn.close()
+    titles_ref = db.collection("titles")
+    docs = titles_ref.stream()
+    
+    titles = [doc.to_dict()["title"] for doc in docs]
+    
     return jsonify({"titles": titles})
 
 
 @app.route('/add', methods=["POST"])
 @login_required
 def add_budget():
+    user_id = "jackward"
     data = request.get_json()
-    date = data["date"]
-    expenses = data["expenses"]
 
-    conn = connect_db()
-    cursor = conn.cursor()
+    print("📌 Received Budget Data:", data)  # Debugging Log
+
+    budget_month = datetime.strptime(data["date"], "%Y-%m-%d").strftime("%Y-%m")
+
+    expenses = data["expenses"]
+    budget_ref = db.collection("users").document(user_id).collection("budgets").document(budget_month)
 
     for expense in expenses:
-        cursor.execute("INSERT INTO expenses (date, category, title, amount) VALUES (?, ?, ?, ?)",
-                       (date, expense["category"], expense["title"], expense["amount"]))
+        expense["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
+        budget_ref.collection("expenses").add(expense)
 
-    conn.commit()
-    conn.close()
-    return jsonify({"message": "Budget saved successfully!"})
+    return jsonify({"message": f"Budget for {budget_month} saved successfully!"})
+
 
 # House Equity Data
 INITIAL_MORTGAGE = 342000
@@ -296,16 +324,64 @@ def get_equity():
         return jsonify({"error": "Database error", "message": str(e)}), 500
     
 # Fetch Report Data
-@app.route('/report-data/<year>/<month>')
+@app.route('/report-data/<int:year>/<int:month>', methods=['GET'])
 @login_required
 def report_data(year, month):
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT category, title, amount FROM expenses WHERE date LIKE ?", (f"{year}-{month}-%",))
-    expenses = cursor.fetchall()
-    conn.close()
-    return jsonify([{ "category": row[0], "title": row[1], "amount": float(row[2]) } for row in expenses])
+    try:
+        user_id = "jackward"  # Ensure we always fetch from 'jackward'
+
+        # Format the month correctly (YYYY-MM)
+        budget_month = f"{year}-{month:02d}"
+
+        # Query Firestore for expenses within the selected budget month
+        expenses_ref = (
+            db.collection("users")
+            .document(user_id)
+            .collection("budgets")
+            .document(budget_month)
+            .collection("expenses")
+        )
+
+        query = expenses_ref.stream()
+
+        expenses = []
+        for doc in query:
+            data = doc.to_dict()
+            data["id"] = doc.id
+            data["date"] = data["date"].strftime("%Y-%m-%d")
+            expenses.append(data)
+
+        return jsonify(expenses)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/delete-title/<budget_month>/<expense_id>', methods=['DELETE'])
+@login_required
+def delete_title(budget_month, expense_id):
+    try:
+        user_id = "jackward"
+        print(f"🔍 Attempting to delete: budget_month={budget_month}, expense_id={expense_id}")
+
+        expense_ref = (
+            db.collection("users")
+            .document(user_id)
+            .collection("budgets")
+            .document(budget_month)
+            .collection("expenses")
+            .document(expense_id)
+        )
+
+        # Delete the expense from Firestore
+        expense_ref.delete()
+        print(f"✅ Deleted successfully: {expense_id}")
+
+        return jsonify({"message": f"Title {expense_id} deleted successfully!"}), 200
+    except Exception as e:
+        print(f"❌ Error deleting: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
 
 # Ensure Flask runs correctly
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

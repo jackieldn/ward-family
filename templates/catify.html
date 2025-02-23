@@ -25,10 +25,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Ovo&family=Radley&display=swap" rel="stylesheet">
 
 <!-- JS Files -->
-<script src="{{ url_for('static', filename='weightTracker.js') }}" defer></script>
-<script src="{{ url_for('static', filename='medicationTracker.js') }}" async></script>
 <script src="{{ url_for('static', filename='catify.js') }}" defer></script>
-<script src="{{ url_for('static', filename='appointmentTracker.js') }}" defer></script>
+<script src="{{ url_for('static', filename='weightTracker.js') }}" defer></script>
+<script src="{{ url_for('static', filename='catifyProfile.js') }}" defer></script>
+<script src="{{ url_for('static', filename='medicationTracker.js') }}" async></script>
+<script src="{{ url_for('static', filename='reminderTracker.js') }}" defer></script>
 
 </head>
 
@@ -39,52 +40,13 @@
     <h1>Catify Health Centre</h1>
 
     <!-- Cat Selection -->
-    <div class="cat-selector">
-        <img id="select-grey" class="cat-image active" src="{{ url_for('static', filename='images/grey.jpg') }}" alt="Grey">
-        <img id="select-pumpkin" class="cat-image" src="{{ url_for('static', filename='images/pumpkin.jpg') }}" alt="Pumpkin">
-    </div>
+    <div class="cat-selector"></div>
 
-<!-- Cat Profiles -->
-<div class="cat-content-box">
-    <div class="cat-profile-container">
-        <div class="cat-profile" id="profile-pumpkin" style="display: none;">
-            <h3>Pumpkin</h3>
-            <div class="profile-columns">
-                <div class="profile-left">
-                    <h4>Cat Details</h4>
-                    <p><strong>Date of Birth:</strong> 19/04/2014</p>
-                    <p><strong>Breed:</strong> Moggy</p>
-                    <p><strong>Sex:</strong> Male</p>
-                </div>
-                <div class="profile-right">
-                    <h4>Insurance</h4>
-                    <p><strong>Annual limit:</strong> £2,000</p>
-                    <p><strong>Excess:</strong> £100</p>
-                    <p><strong>Monthly Payment:</strong> £27.38</p>
-                    <p><strong>Policy active:</strong> 21/01/2025 - 21/01/2026</p>
-                </div>
-            </div>
-        </div>
-        <div class="cat-profile" id="profile-grey" style="display: none;">
-            <h3>Grey</h3>
-            <div class="profile-columns">
-                <div class="profile-left">
-                    <h4>Cat Details</h4>
-                    <p><strong>Date of Birth:</strong> 12/08/2021</p>
-                    <p><strong>Breed:</strong> Moggy</p>
-                    <p><strong>Sex:</strong> Male</p>
-                </div>
-                <div class="profile-right">
-                    <h4>Insurance</h4>
-                    <p><strong>Annual limit:</strong> £2,000</p>
-                    <p><strong>Excess:</strong> £200</p>
-                    <p><strong>Monthly Payment:</strong> £16.08</p>
-                    <p><strong>Policy active:</strong> 01/01/2025 - 01/01/2026</p>
-                </div>
-            </div>
-        </div>
+    <!-- Cat Profiles -->
+    <div class="cat-content-box">
+        <!-- Dynamic cat profiles will be loaded here -->
+        <div class="cat-profile-container"></div>
     </div>
-</div>
 
 
     <!-- Health Tracker Sections -->
@@ -97,7 +59,7 @@
             <input type="number" id="weight-input" placeholder="Enter weight">
             <input type="date" id="weight-date">
         </div>
-        
+    
         <div class="save-button-container">
             <button id="save-weight" class="save">Save</button>
         </div>        

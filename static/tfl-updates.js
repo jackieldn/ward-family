@@ -147,32 +147,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch disruptions from Flask API
     async function fetchDisruptions() {
       try {
-        const response = await fetch('/get-tfl-status');
-        const data = await response.json();
+          const response = await fetch('/get-tfl-status');
+          const data = await response.json();
+          const disruptionsContainer = document.getElementById("disruptions-list");
   
-        // Filter for selected lines
-        const lineDisruptions = data.filter(line =>
-          disruptionLines.includes(line.name) && line.lineStatuses[0]?.statusSeverityDescription !== 'Good Service'
-        );
+          const disruptionLines = ['District', 'Central', 'Victoria', 'Northern'];
+          const disruptions = data.filter(line =>
+              disruptionLines.includes(line.name) && line.lineStatuses[0]?.statusSeverityDescription !== 'Good Service'
+          );
   
-        // Display disruptions
-        disruptionsContainer.innerHTML = lineDisruptions.length > 0 ? lineDisruptions.map(disruption => `
-          <div class="disruption-item">
-            <div class="disruption-title">${disruption.name}</div>
-            <div class="disruption-description">
-              ${disruption.lineStatuses[0]?.reason || 'Service disruption reported'}
-            </div>
-          </div>
-        `).join('') : `<div class="disruption-item">No current disruptions.</div>`;
+          disruptionsContainer.innerHTML = disruptions.length > 0 ? disruptions.map(disruption => `
+              <div class="disruption-item">
+                  <div class="disruption-title">${disruption.name}</div>
+                  <div class="disruption-description">${disruption.lineStatuses[0]?.reason || 'Service disruption reported'}</div>
+              </div>
+          `).join('') : `<div class="disruption-item">No current disruptions.</div>`;
   
       } catch (error) {
-        console.error("Failed to fetch disruptions:", error);
-        disruptionsContainer.innerHTML = `<div class="disruption-item">Failed to load disruptions</div>`;
+          console.error("Failed to fetch disruptions:", error);
       }
-    }
+  }
   
-    // Fetch disruptions on page load and refresh every 60 seconds
-    fetchDisruptions();
-    setInterval(fetchDisruptions, 60000); // Refresh every minute
-  });
-  
+  // Refresh every 60 seconds
+  fetchDisruptions();
+  setInterval(fetchDisruptions, 60000);
+  });  

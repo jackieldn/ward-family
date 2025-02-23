@@ -1,91 +1,101 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const medName = document.getElementById("med-name");
-    const medDosage = document.getElementById("med-dosage");
-    const medFrequency = document.getElementById("med-frequency");
-    const medDailyCount = document.getElementById("med-daily-count");
-    const medStartDate = document.getElementById("med-start-date");
-    if (medStartDate && !medStartDate.value) {
-        const today = new Date().toISOString().split('T')[0];
-        medStartDate.value = today;
-    } 
+    const medicationList = document.getElementById("medication-list");
     const addMedButton = document.getElementById("add-med");
-    const medList = document.getElementById("medication-list");
 
-    let selectedCat = "Grey"; // Default
+    let selectedCat = null;
 
-    // Listen for cat selection changes
+    // Detect cat selection changes
     document.addEventListener("catChanged", function (event) {
         selectedCat = event.detail;
-        fetchMedications();
+        console.log("🔄 Switching to cat:", selectedCat);
+        fetchMedications(selectedCat); // ✅ Now correctly passes the cat ID
     });
 
-    // Ensure daily count selector is hidden by default (because Monthly is now selected)
-    if (medFrequency.value !== "daily") {
-        medDailyCount.classList.add("hidden");
-    }
+    function fetchMedications(catId) {
+        if (!catId) return;
 
-    // Show/hide daily frequency dropdown based on selection
-    medFrequency.addEventListener("change", function () {
-        if (medFrequency.value === "daily") {
-            medDailyCount.classList.remove("hidden");
-        } else {
-            medDailyCount.classList.add("hidden");
-        }
-    });
-
-    // Fetch medications from API
-    function fetchMedications() {
-        fetch(`/catify/get-medications/${selectedCat}`)
+        fetch(`/catify/get-medications/${catId}`)
             .then(response => response.json())
-            .then(updateMedicationList)
-            .catch(error => console.error("Error fetching medications:", error));
+            .then(data => {
+                console.log("📌 Medications Fetched:", data);
+                updateMedicationList(data);
+            })
+            .catch(error => console.error("❌ Error fetching medications:", error));
     }
 
-    // Save new medication entry
-    addMedButton.addEventListener("click", function () {
-        const name = medName.value.trim();
-        const dosage = medDosage.value.trim();
-        const frequency = medFrequency.value;
-        const dailyCount = frequency === "daily" ? medDailyCount.value : 1; // Default to 1
-        const startDate = medStartDate.value; // Get the selected date
+    function updateMedicationList(medications) {
+        medicationList.innerHTML = ""; // Clear list
 
-        if (!name || !dosage || !startDate) {
-            alert("Please enter medication name, dosage, and start date.");
+        if (!medications || medications.length === 0) {
+            medicationList.innerHTML = "<li>No medications added</li>";
+            return;
+        }
+
+        medications.forEach(med => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <strong>${med.medication_name}</strong> - ${med.dosage}, ${med.frequency}
+                <br>Next Application: ${med.next_application}
+                <button class="delete-med button-delete" data-id="${med.id}">❌</button>
+            `;
+            medicationList.appendChild(li);
+        });
+
+        // Add event listeners for delete buttons
+        document.querySelectorAll(".delete-med").forEach(button => {
+            button.addEventListener("click", function () {
+                const medId = this.getAttribute("data-id");
+                deleteMedication(medId);
+            });
+        });
+    }
+
+    function addMedication() {
+        if (!selectedCat) {
+            alert("⚠️ Please select a cat first.");
+            return;
+        }
+
+        const medName = document.getElementById("med-name").value.trim();
+        const medDosage = document.getElementById("med-dosage").value.trim();
+        const medFrequency = document.getElementById("med-frequency").value;
+        const medStartDate = document.getElementById("med-start-date").value;
+
+        if (!medName || !medDosage || !medFrequency || !medStartDate) {
+            alert("⚠️ Please enter all medication details.");
             return;
         }
 
         fetch("/catify/add-medication", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-                cat_name: selectedCat, 
-                name, 
-                dosage, 
-                frequency, 
-                daily_count: parseInt(dailyCount),
-                start_date: startDate
+            body: JSON.stringify({
+                cat_id: selectedCat,
+                medication_name: medName,
+                dosage: parseFloat(medDosage),
+                frequency: medFrequency,
+                next_application: medStartDate
             })
         })
         .then(response => response.json())
-        .then(() => fetchMedications()) // Refresh list
-        .catch(error => console.error("Error saving medication:", error));
-    });
-
-    // Update medication list UI
-    function updateMedicationList(meds) {
-        medList.innerHTML = meds.length ? "" : "<li>No medications added</li>";
-        meds.forEach(med => {
-            const startDate = med.start_date ? med.start_date : "No date provided";
-            const li = document.createElement("li");
-            li.innerHTML = `
-                ${med.name} - ${med.dosage} (${med.frequency}, ${med.daily_count}x) - Starts on ${startDate}
-            `;
-            medList.appendChild(li);
-        });
+        .then(data => {
+            console.log("✅ Medication added:", data);
+            fetchMedications(selectedCat); // ✅ Refresh the list with the correct cat
+        })
+        .catch(error => console.error("❌ Error adding medication:", error));
     }
 
-    fetchMedications(); // Load medications on page load
-});
+    function deleteMedication(medicationId) {
+        fetch(`/catify/delete-medication/${selectedCat}/${medicationId}`, {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Medication deleted:", data);
+            fetchMedications(selectedCat); // ✅ Refresh list with the correct cat
+        })
+        .catch(error => console.error("❌ Error deleting medication:", error));
+    }
 
-// 🟡 Make updateMedicationList globally accessible
-window.updateMedicationList = updateMedicationList;
+    addMedButton.addEventListener("click", addMedication);
+});
