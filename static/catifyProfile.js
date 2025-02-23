@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ catify.js loaded and ready.");
+
+    document.querySelectorAll(".cat-profile").forEach(cat => {
+        cat.addEventListener("click", function () {
+            const catId = this.getAttribute("data-id");
+            console.log(`🐱 Switching to: ${catId}`);
+
+            const event = new CustomEvent("catChanged", { detail: catId });
+            document.dispatchEvent(event);
+        });
+    });
+
     const catSelector = document.querySelector(".cat-selector");
     const profileContainer = document.querySelector(".cat-profile-container");
     let selectedCat = null;

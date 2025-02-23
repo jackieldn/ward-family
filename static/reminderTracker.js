@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("catChanged", function (event) {
         selectedCat = event.detail;
         fetchReminders();
+        if (selectedCat) {
+            fetchReminders(selectedCat);
+        } else {
+            console.warn("⚠️ No cat selected.");
+        }
     });
 
     function fetchReminders() {

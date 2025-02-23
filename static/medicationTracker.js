@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedCat = event.detail;
         console.log("🔄 Switching to cat:", selectedCat);
         fetchMedications(selectedCat); // ✅ Now correctly passes the cat ID
+        if (selectedCat) {
+            fetchMedications(selectedCat);
+        } else {
+            console.warn("⚠️ No cat selected.");
+        }
     });
 
     function fetchMedications(catId) {
