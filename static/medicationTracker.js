@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function fetchMedications(catId) {
         if (!catId) return;
 
-        fetch(`/catify/get-medications/${catId}`)
+        fetch(`https://wardfamily.hopto.org/catify/get-medications/${catId}`)
             .then(response => response.json())
             .then(data => {
                 console.log("📌 Medications Fetched:", data);
