@@ -5,7 +5,7 @@ from functools import wraps
 catify_bp = Blueprint("catify_bp", __name__)
 
 def get_db():
-    from app import db
+    from app import get_db
     return db
 
 # Require Login Middleware
