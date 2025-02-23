@@ -31,8 +31,9 @@ credentials = service_account.Credentials.from_service_account_file(
 db = firestore.Client(credentials=credentials)
 
 # Initialize Firebase Admin SDK
-admin_cred = admin_credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
-firebase_admin.initialize_app(admin_cred)
+if not firebase_admin._apps:
+    admin_cred = admin_credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
+    firebase_admin.initialize_app(admin_cred)
 
 # Import Blueprints AFTER initializing the database
 from catify import catify_bp
