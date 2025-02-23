@@ -5,7 +5,7 @@ from google.cloud import firestore
 from datetime import datetime
 from functools import wraps
 import firebase_admin
-from firebase_admin import credentials, auth as firebase_auth
+from firebase_admin import credentials as admin_credentials, auth as firebase_auth
 import requests
 import re
 import os
@@ -15,11 +15,12 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Initialize Firestore
-db = firestore.Client()
 
 # Path to your service account file
 SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"
+
+firestore_credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+db = firestore.Client(credentials=firestore_credentials)
 
 # Create credentials object from your service account
 credentials = service_account.Credentials.from_service_account_file(
@@ -30,8 +31,8 @@ credentials = service_account.Credentials.from_service_account_file(
 db = firestore.Client(credentials=credentials)
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
-firebase_admin.initialize_app(cred)
+admin_cred = admin_credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
+firebase_admin.initialize_app(admin_cred)
 
 # Import Blueprints AFTER initializing the database
 from catify import catify_bp
@@ -154,7 +155,7 @@ def logout():
 @app.route('/get-monthly-total-data', methods=['GET'])
 @login_required
 def get_monthly_total_data():
-    user_id = session["jackward"]
+    user_id = session["user_id"]
     expenses_ref = db.collection("users").document(user_id).collection("expenses")
     
     expenses = expenses_ref.stream()
@@ -176,7 +177,7 @@ def get_monthly_total_data():
 @app.route('/get-current-month-data', methods=['GET'])
 @login_required
 def get_current_month_data():
-    user_id = session["jackward"]
+    user_id = session["user_id"]
     current_month = datetime.now().strftime("%Y-%m")
 
     expenses_ref = db.collection("users").document(user_id).collection("expenses")
@@ -232,7 +233,7 @@ def get_titles():
 @app.route('/add', methods=["POST"])
 @login_required
 def add_budget():
-    user_id = "jackward"
+    user_id = "user_id"
     data = request.get_json()
 
     print("📌 Received Budget Data:", data)  # Debugging Log
