@@ -1,13 +1,13 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, render_template
 from datetime import datetime
 from functools import wraps
 
+from app import db  
+
 catify_bp = Blueprint("catify_bp", __name__)
 
-from app import db  # Import Firestore client
-
 def get_db():
-    return db  # Return the Firestore database instance
+    return db  
 
 # Require Login Middleware
 def require_login(f):
@@ -17,8 +17,6 @@ def require_login(f):
             return jsonify({"error": "Authentication required"}), 401
         return f(*args, **kwargs)
     return decorated_function
-
-from flask import Blueprint, render_template
 
 @catify_bp.route("/", methods=["GET"])
 @require_login

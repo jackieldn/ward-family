@@ -36,8 +36,9 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(admin_cred)
 
 # Import Blueprints AFTER initializing the database
-from catify import catify_bp
-app.register_blueprint(catify_bp, url_prefix="/catify")
+if "catify_bp" not in globals():
+    from catify import catify_bp
+    app.register_blueprint(catify_bp, url_prefix="/catify")
 
 @app.route('/login', methods=['GET'])
 def login():
