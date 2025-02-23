@@ -97,7 +97,7 @@ def add_weight():
 def get_medications(cat_id):
     """Fetches medication records for a cat."""
     try:
-        meds_ref = db.collection("users").document("catify").collection("cats").document(cat_id).collection("medications").stream()
+        meds_ref = get_db.collection("users").document("catify").collection("cats").document(cat_id).collection("medications").stream()
         medications = [{"id": doc.id, **doc.to_dict()} for doc in meds_ref]
 
         return jsonify(medications), 200
@@ -148,7 +148,7 @@ def delete_medication(cat_id, medication_id):
 def get_reminders(cat_id):
     """Fetches reminder records for a cat."""
     try:
-        reminders_ref = db.collection("users").document("catify").collection("cats").document(cat_id).collection("reminders").stream()
+        reminders_ref = get_db.collection("users").document("catify").collection("cats").document(cat_id).collection("reminders").stream()
         reminders = [{"id": doc.id, **doc.to_dict()} for doc in reminders_ref]
 
         return jsonify(reminders), 200
