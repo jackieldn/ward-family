@@ -28,10 +28,6 @@ def catify_home():
 @require_login
 def get_cats():
     try:
-        user_id = session.get("user_id")
-        if not user_id:
-            return jsonify({"error": "Unauthorized"}), 401
-
         cats_ref = get_db().collection("users").document("catify").collection("cats")
         cats_docs = cats_ref.stream()
 
@@ -44,10 +40,11 @@ def get_cats():
             insurance_ref = cats_ref.document(doc.id).collection("insurance").stream()
             for ins_doc in insurance_ref:
                 cat["insurance"] = ins_doc.to_dict()
-        
+
         return jsonify(cats_data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 # Fetch Weights for a Cat
