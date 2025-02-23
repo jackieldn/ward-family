@@ -39,9 +39,6 @@ if not firebase_admin._apps:
 from catify import catify_bp
 app.register_blueprint(catify_bp, url_prefix="/catify")
 
-# Register Blueprints
-app.register_blueprint(catify_bp, url_prefix="/catify")
-
 # Require Login Decorator
 def login_required(f):
     @wraps(f)
