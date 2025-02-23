@@ -1,9 +1,12 @@
 from flask import Blueprint, request, jsonify, session
 from datetime import datetime
 from functools import wraps
-from app import db
 
 catify_bp = Blueprint("catify_bp", __name__)
+
+def get_db():
+    from app import db
+    return db
 
 # Require Login Middleware
 def require_login(f):
@@ -30,7 +33,7 @@ def get_cats():
         if not user_id:
             return jsonify({"error": "Unauthorized"}), 401
 
-        cats_ref = db.collection("users").document("catify").collection("cats")
+        cats_ref = get_db().collection("users").document("catify").collection("cats")
         cats_docs = cats_ref.stream()
 
         cats_data = {}

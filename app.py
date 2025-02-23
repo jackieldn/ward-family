@@ -36,7 +36,8 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(admin_cred)
 
 # Import Blueprints AFTER initializing the database
-from catify import catify_bp
+import catify
+app.register_blueprint(catify.catify_bp, url_prefix="/catify")
 
 # Register Blueprints
 app.register_blueprint(catify_bp, url_prefix="/catify")
