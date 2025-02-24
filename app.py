@@ -30,30 +30,27 @@ FIREBASE_CONFIG = {
     "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID"),
 }
 
-# ✅ Dynamically Set Service Account Path
-if os.getenv("FLASK_ENV") == "production":
-    SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"  # Server path
-else:
-    SERVICE_ACCOUNT_FILE = "creds/service_account.json"  # Local path
+# ✅ Load service account paths from environment variables
+SERVICE_ACCOUNT_FILE = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "creds/service_account.json")
+FIREBASE_CREDENTIALS_PATH = os.getenv("FIREBASE_ADMIN_CREDENTIALS_PATH", "creds/firebase-credentials.json")
 
+# ✅ Firestore Initialization (Handle Missing File)
 try:
     firestore_credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
     db = firestore.Client(credentials=firestore_credentials)
+    print("✅ Firestore initialized successfully")
 except FileNotFoundError:
     print(f"❌ Service account file not found: {SERVICE_ACCOUNT_FILE}")
 
 # ✅ Firebase Admin Initialization (Avoid Duplicate Initialization)
 if not firebase_admin._apps:
-    FIREBASE_CREDENTIALS_PATH = (
-        "/etc/wardfamily/firebase-credentials.json" if os.getenv("FLASK_ENV") == "production"
-        else "creds/firebase-credentials.json"
-    )
-
     try:
         admin_cred = admin_credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
         firebase_admin.initialize_app(admin_cred)
+        print("✅ Firebase Admin initialized successfully")
     except FileNotFoundError:
         print(f"❌ Firebase credentials file not found: {FIREBASE_CREDENTIALS_PATH}")
+
 
 from catify import catify_bp 
 app.register_blueprint(catify_bp, url_prefix="/catify")
