@@ -1,5 +1,7 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
 from google.oauth2 import service_account
 from google.cloud import firestore
 from datetime import datetime
@@ -8,35 +10,53 @@ import firebase_admin
 from firebase_admin import credentials as admin_credentials, auth as firebase_auth
 import requests
 import re
-import os
 
 # Initialize Flask App
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+# Load .env variables
+load_dotenv()
 
-# Path to your service account file
-SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"
+# Firebase API keys from .env
+FIREBASE_CONFIG = {
+    "apiKey": os.getenv("FIREBASE_API_KEY"),
+    "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+    "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+    "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+    "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+    "appId": os.getenv("FIREBASE_APP_ID"),
+    "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID"),
+}
 
-firestore_credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
-db = firestore.Client(credentials=firestore_credentials)
+# ✅ Dynamically Set Service Account Path
+if os.getenv("FLASK_ENV") == "production":
+    SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"  # Server path
+else:
+    SERVICE_ACCOUNT_FILE = "creds/service_account.json"  # Local path
 
-# Create credentials object from your service account
-credentials = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE
-)
+try:
+    firestore_credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+    db = firestore.Client(credentials=firestore_credentials)
+except FileNotFoundError:
+    print(f"❌ Service account file not found: {SERVICE_ACCOUNT_FILE}")
 
-# Pass credentials when creating the Firestore client
-db = firestore.Client(credentials=credentials)
-
-# Initialize Firebase Admin SDK
+# ✅ Firebase Admin Initialization (Avoid Duplicate Initialization)
 if not firebase_admin._apps:
-    admin_cred = admin_credentials.Certificate("/etc/wardfamily/firebase-credentials.json")
-    firebase_admin.initialize_app(admin_cred)
+    FIREBASE_CREDENTIALS_PATH = (
+        "/etc/wardfamily/firebase-credentials.json" if os.getenv("FLASK_ENV") == "production"
+        else "creds/firebase-credentials.json"
+    )
 
-from catify import catify_bp  # ✅ Import after Firestore initialization
-app.register_blueprint(catify_bp, url_prefix="/catify")  # ✅ Register blueprint once
+    try:
+        admin_cred = admin_credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+        firebase_admin.initialize_app(admin_cred)
+    except FileNotFoundError:
+        print(f"❌ Firebase credentials file not found: {FIREBASE_CREDENTIALS_PATH}")
+
+from catify import catify_bp 
+app.register_blueprint(catify_bp, url_prefix="/catify")
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -47,7 +67,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "user_id" not in session:
-            return redirect(url_for("login"))  # ✅ Now works because `/login` exists
+            return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
 

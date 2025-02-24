@@ -16,3 +16,6 @@ venv/
 " > .gitignore
 database.db
 wardfamily-5e752-firebase-adminsdk-fbsvc-5b78123407.json
+creds/service_account.json
+.gitignore
+creds/firebase-credentials.json
