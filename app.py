@@ -32,6 +32,7 @@ FIREBASE_CONFIG = {
 
 # Load credentials dynamically
 FIREBASE_CREDENTIAL_PATH = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "/var/www/wardfamily/creds/service_account.json")
+FIREBASE_CREDENTIALS_PATH = os.getenv("FIREBASE_ADMIN_CREDENTIALS_PATH", "/etc/wardfamily/firebase-credentials.json")
 
 if not os.path.exists(FIREBASE_CREDENTIAL_PATH):
     print(f"❌ Firebase credentials file not found: {FIREBASE_CREDENTIAL_PATH}")
@@ -72,7 +73,16 @@ app.register_blueprint(catify_bp, url_prefix="/catify")
 
 @app.route('/login', methods=['GET'])
 def login():
-    return render_template("login.html", firebase_api_key=os.getenv("FIREBASE_API_KEY"))
+    return render_template("login.html", 
+        firebase_api_key=os.getenv("FIREBASE_API_KEY"),
+        firebase_auth_domain=os.getenv("FIREBASE_AUTH_DOMAIN"),
+        firebase_project_id=os.getenv("FIREBASE_PROJECT_ID"),
+        firebase_storage_bucket=os.getenv("FIREBASE_STORAGE_BUCKET"),
+        firebase_messaging_sender_id=os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+        firebase_app_id=os.getenv("FIREBASE_APP_ID"),
+        firebase_measurement_id=os.getenv("FIREBASE_MEASUREMENT_ID")
+    )
+
 
 # Require Login Decorator
 def login_required(f):

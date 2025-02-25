@@ -23,12 +23,12 @@
             // Firebase configuration (replace these placeholder values with your secure config via environment variables or a secure method)
             const firebaseConfig = {
                 apiKey: "{{ firebase_api_key }}", 
-                authDomain: "wardfamily-5e752.firebaseapp.com",
-                projectId: "wardfamily-5e752",
-                storageBucket: "wardfamily-5e752.appspot.com",
-                messagingSenderId: "532377588233",
-                appId: "1:532377588233:web:4630718cb1824a142aded8",
-                measurementId: "G-T5MCDWRGEX"
+                authDomain: "{{ firebase_auth_domain }}",
+                projectId: "{{ firebase_project_id }}",
+                storageBucket: "{{ firebase_storage_bucket }}",
+                messagingSenderId: "{{ firebase_messaging_sender_id }}",
+                appId: "{{ firebase_app_id }}",
+                measurementId: "{{ firebase_measurement_id }}"
             };
     
             // Initialize Firebase
