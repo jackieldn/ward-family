@@ -30,16 +30,21 @@ FIREBASE_CONFIG = {
     "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID"),
 }
 
-# ✅ Load service account paths from environment variables
-SERVICE_ACCOUNT_FILE = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "creds/service_account.json")
-FIREBASE_CREDENTIALS_PATH = os.getenv("FIREBASE_ADMIN_CREDENTIALS_PATH", "creds/firebase-credentials.json")
+# Determine the correct Firebase service account path
+if os.getenv("FLASK_ENV") == "production":
+    SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"
+    FIREBASE_CREDENTIALS_PATH = "/etc/wardfamily/firebase-credentials.json"
+else:
+    SERVICE_ACCOUNT_FILE = "creds/service_account.json"
+    FIREBASE_CREDENTIALS_PATH = "creds/firebase-credentials.json"
 
-# ✅ Firestore Initialization (Handle Missing File)
-try:
+# ✅ Ensure the service account file exists before initializing Firestore
+if os.path.exists(SERVICE_ACCOUNT_FILE):
     firestore_credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
     db = firestore.Client(credentials=firestore_credentials)
     print("✅ Firestore initialized successfully")
-except FileNotFoundError:
+else:
+    db = None  # Avoid errors if the file is missing
     print(f"❌ Service account file not found: {SERVICE_ACCOUNT_FILE}")
 
 # ✅ Firebase Admin Initialization (Avoid Duplicate Initialization)
