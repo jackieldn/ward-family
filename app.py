@@ -7,7 +7,7 @@ from google.cloud import firestore
 from datetime import datetime
 from functools import wraps
 import firebase_admin
-from firebase_admin import credentials as admin_credentials
+from firebase_admin import credentials as admin_credentials, auth as firebase_auth  # ✅ Ensure correct import
 import requests
 import re
 
@@ -30,7 +30,7 @@ FIREBASE_CONFIG = {
     "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID"),
 }
 
-# Load credentials dynamically based on environment
+# Determine Firebase credential paths based on environment
 if os.getenv("FLASK_ENV") == "production":
     SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"
     FIREBASE_CREDENTIALS_PATH = "/etc/wardfamily/firebase-credentials.json"
@@ -38,16 +38,16 @@ else:
     SERVICE_ACCOUNT_FILE = "creds/service_account.json"
     FIREBASE_CREDENTIALS_PATH = "creds/firebase-credentials.json"
 
-# ✅ Ensure the service account file exists before initializing Firestore
+# ✅ Ensure Firestore service account file exists
 if os.path.exists(SERVICE_ACCOUNT_FILE):
     firestore_credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
     db = firestore.Client(credentials=firestore_credentials)
     print("✅ Firestore initialized successfully")
 else:
-    db = None  # Avoid errors if the file is missing
-    print(f"❌ Service account file not found: {SERVICE_ACCOUNT_FILE}")
+    db = None  # Avoid breaking app if Firestore file is missing
+    print(f"❌ Firestore service account file not found: {SERVICE_ACCOUNT_FILE}")
 
-# ✅ Firebase Admin Initialization (Avoid Duplicate Initialization)
+# ✅ Initialize Firebase Admin SDK (Only If Not Initialized)
 if not firebase_admin._apps:
     try:
         admin_cred = admin_credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
@@ -56,11 +56,11 @@ if not firebase_admin._apps:
     except FileNotFoundError:
         print(f"❌ Firebase credentials file not found: {FIREBASE_CREDENTIALS_PATH}")
 
-
-
+# Register Blueprints
 from catify import catify_bp 
 app.register_blueprint(catify_bp, url_prefix="/catify")
 
+# ✅ Ensure Firebase API key is passed to the frontend
 @app.route('/login', methods=['GET'])
 def login():
     return render_template("login.html", 
@@ -431,4 +431,4 @@ def delete_title(budget_month, expense_id):
 
 # Ensure Flask runs correctly
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=False, host="0.0.0.0", port=5000)
