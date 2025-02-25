@@ -6,7 +6,7 @@ from google.oauth2 import service_account
 from google.cloud import firestore
 from datetime import datetime
 from functools import wraps
-import firebase_admin
+import firebase_admin 
 from firebase_admin import credentials as admin_credentials, auth as firebase_auth
 import requests
 import re
@@ -29,6 +29,16 @@ FIREBASE_CONFIG = {
     "appId": os.getenv("FIREBASE_APP_ID"),
     "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID"),
 }
+
+# Load credentials dynamically
+FIREBASE_CREDENTIAL_PATH = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "/var/www/wardfamily/creds/service_account.json")
+
+if not os.path.exists(FIREBASE_CREDENTIAL_PATH):
+    print(f"❌ Firebase credentials file not found: {FIREBASE_CREDENTIAL_PATH}")
+else:
+    print(f"✅ Using Firebase credentials from: {FIREBASE_CREDENTIAL_PATH}")
+    cred = credentials.Certificate(FIREBASE_CREDENTIAL_PATH)
+    firebase_admin.initialize_app(cred)
 
 # Determine the correct Firebase service account path
 if os.getenv("FLASK_ENV") == "production":
@@ -62,7 +72,7 @@ app.register_blueprint(catify_bp, url_prefix="/catify")
 
 @app.route('/login', methods=['GET'])
 def login():
-    return render_template("login.html")
+    return render_template("login.html", firebase_api_key=os.getenv("FIREBASE_API_KEY"))
 
 # Require Login Decorator
 def login_required(f):
