@@ -6,8 +6,8 @@ from google.oauth2 import service_account
 from google.cloud import firestore
 from datetime import datetime
 from functools import wraps
-import firebase_admin 
-from firebase_admin import credentials as admin_credentials, auth as firebase_auth
+import firebase_admin
+from firebase_admin import credentials as admin_credentials
 import requests
 import re
 
@@ -30,18 +30,7 @@ FIREBASE_CONFIG = {
     "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID"),
 }
 
-# Load credentials dynamically
-FIREBASE_CREDENTIAL_PATH = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "/var/www/wardfamily/creds/service_account.json")
-FIREBASE_CREDENTIALS_PATH = os.getenv("FIREBASE_ADMIN_CREDENTIALS_PATH", "/etc/wardfamily/firebase-credentials.json")
-
-if not os.path.exists(FIREBASE_CREDENTIAL_PATH):
-    print(f"❌ Firebase credentials file not found: {FIREBASE_CREDENTIAL_PATH}")
-else:
-    print(f"✅ Using Firebase credentials from: {FIREBASE_CREDENTIAL_PATH}")
-    cred = credentials.Certificate(FIREBASE_CREDENTIAL_PATH)
-    firebase_admin.initialize_app(cred)
-
-# Determine the correct Firebase service account path
+# Load credentials dynamically based on environment
 if os.getenv("FLASK_ENV") == "production":
     SERVICE_ACCOUNT_FILE = "/var/www/wardfamily/creds/service_account.json"
     FIREBASE_CREDENTIALS_PATH = "/etc/wardfamily/firebase-credentials.json"
@@ -66,6 +55,7 @@ if not firebase_admin._apps:
         print("✅ Firebase Admin initialized successfully")
     except FileNotFoundError:
         print(f"❌ Firebase credentials file not found: {FIREBASE_CREDENTIALS_PATH}")
+
 
 
 from catify import catify_bp 
